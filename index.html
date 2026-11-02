@@ -10,40 +10,11 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   
-  <!-- PWA Theme Color -->
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#050505">
-
-  <!-- Inject PWA Manifest Dynamically -->
-  <script>
-    const manifestData = {
-      "name": "URBAN MAN SHOP 2243",
-      "short_name": "UrbanMan",
-      "start_url": "./index.html",
-      "display": "standalone",
-      "background_color": "#050505",
-      "theme_color": "#050505",
-      "icons": [
-        {
-          "src": "assets/images/logo.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "assets/images/logo.png",
-          "sizes": "512x512",
-          "type": "image/png"
-        }
-      ]
-    };
-    const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
-    const manifestURL = URL.createObjectURL(manifestBlob);
-    const link = document.createElement('link');
-    link.rel = 'manifest';
-    link.href = manifestURL;
-    document.head.appendChild(link);
-  </script>
 
   <script>
     tailwind.config = {
@@ -72,7 +43,6 @@
       min-height: 100vh;
     }
 
-    /* Effets de transparence Glassmorphism */
     .glass-card {
       background: rgba(15, 15, 18, 0.6);
       backdrop-filter: blur(16px);
@@ -89,20 +59,28 @@
     }
 
     .glass-modal {
-      background: rgba(10, 10, 12, 0.85);
+      background: rgba(10, 10, 12, 0.95);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* Gradient Text */
     .text-gradient-gold {
       background: linear-gradient(135deg, #FFF 0%, #D4AF37 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Barre de défilement élégante */
+    /* Zoom fluide pour la visionneuse */
+    #zoomedImage {
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+    #zoomedImage.zoomed {
+      transform: scale(1.8);
+      cursor: zoom-out;
+    }
+
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -117,13 +95,12 @@
 </head>
 <body class="flex flex-col justify-between selection:bg-white selection:text-black">
 
-  <!-- En-tête / Navigation Transparent -->
+  <!-- En-tête / Navigation -->
   <header class="sticky top-0 z-40 glass-nav transition-all">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo et Branding -->
       <a href="#" class="flex items-center space-x-3 group">
         <div class="relative p-0.5 rounded-lg bg-gradient-to-r from-neutral-700 to-neutral-900 group-hover:from-amber-500 group-hover:to-yellow-300 transition duration-300">
-          <img src="assets/images/logo.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=UMS'" alt="Logo Urban Man Shop" class="h-10 w-10 object-contain rounded-md bg-black">
+          <img src="./logo.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=UMS'" alt="Logo Urban Man Shop" class="h-10 w-10 object-contain rounded-md bg-black">
         </div>
         <div>
           <h1 class="font-black text-lg tracking-wider uppercase leading-none text-white group-hover:text-amber-400 transition">URBAN MAN</h1>
@@ -131,7 +108,6 @@
         </div>
       </a>
 
-      <!-- Actions (Recherche & Panier) -->
       <div class="flex items-center space-x-3">
         <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
           <i class="fa-solid fa-magnifying-glass text-sm"></i>
@@ -143,11 +119,10 @@
       </div>
     </div>
 
-    <!-- Barre de Recherche Déroulante -->
     <div id="searchContainer" class="hidden border-t border-neutral-800/60 bg-black/90 backdrop-blur-lg px-4 py-3">
       <div class="max-w-6xl mx-auto flex items-center bg-neutral-900/90 border border-neutral-700/60 rounded-xl px-4 py-2.5">
         <i class="fa-solid fa-search text-neutral-400 mr-3"></i>
-        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Rechercher un produit, vêtement, modèle..." class="bg-transparent text-sm text-white focus:outline-none w-full">
+        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Rechercher un produit..." class="bg-transparent text-sm text-white focus:outline-none w-full">
         <button onclick="toggleSearch()" class="text-neutral-400 hover:text-white ml-2">
           <i class="fa-solid fa-times"></i>
         </button>
@@ -155,22 +130,21 @@
     </div>
   </header>
 
-  <!-- Bannière PWA Installation -->
+  <!-- Bannière PWA -->
   <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border-b border-neutral-800 px-4 py-2.5 flex items-center justify-between text-xs">
     <div class="flex items-center space-x-3">
       <i class="fa-solid fa-mobile-screen-button text-amber-400 text-base"></i>
-      <span>Installez l'application mobile <b>Urban Man Shop</b> pour un accès rapide !</span>
+      <span>Installez l'application <b>Urban Man Shop</b> !</span>
     </div>
-    <button onclick="installPwa()" class="bg-white text-black font-bold px-4 py-1.5 rounded-lg hover:bg-neutral-200 transition text-xs shadow">
+    <button onclick="installPwa()" class="bg-white text-black font-bold px-4 py-1.5 rounded-lg hover:bg-neutral-200 transition text-xs">
       Installer
     </button>
   </div>
 
-  <!-- Hero Section / Message de Bienvenue Chaleureux -->
+  <!-- Hero Section Chaleureux -->
   <section class="relative overflow-hidden pt-8 pb-6 px-4">
     <div class="max-w-6xl mx-auto">
       <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
-        <!-- Effet Néon d'arrière plan -->
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -left-10 -top-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -184,7 +158,7 @@
             Bienvenue chez <br><span class="text-gradient-gold">Urban Man Shop 2243</span>
           </h2>
 
-          <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed font-normal">
+          <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed">
             Découvrez la crème du streetwear masculin. Des collections exclusives, une qualité irréprochable et un service sur-mesure. Commandez directement en toute transparence avec livraison rapide et paiement flexible.
           </p>
 
@@ -203,17 +177,15 @@
     </div>
   </section>
 
-  <!-- Contenu Principal / Catalogues -->
+  <!-- Contenu Principal -->
   <main id="catalogues" class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
-    
-    <!-- Entête de Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-800/80 pb-4">
       <div>
         <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center">
           <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
           Marchandises Disponibles
         </h3>
-        <p class="text-xs text-neutral-400 mt-0.5">23 articles exclusifs préparés pour vous</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Cliquez sur une photo pour l'agrandir et zoomer</p>
       </div>
 
       <div class="flex items-center space-x-2 text-xs text-neutral-400">
@@ -222,10 +194,8 @@
       </div>
     </div>
 
-    <!-- Grille de Produits (Sans Cadres Lourd avec Transparence Soft) -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Généré dynamiquement en JS -->
-    </div>
+    <!-- Grille de Produits -->
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </main>
 
   <!-- Pied de page -->
@@ -233,10 +203,9 @@
     <div class="max-w-6xl mx-auto space-y-5">
       <div class="flex flex-col items-center justify-center space-y-2">
         <h4 class="font-black text-base text-white tracking-widest uppercase">URBAN MAN SHOP 2243</h4>
-        <p class="text-neutral-400 max-w-md">L'élégance urbaine à portée de main. Qualité premium, confiance et transparence.</p>
+        <p class="text-neutral-400 max-w-md">L'élégance urbaine à portée de main.</p>
       </div>
       
-      <!-- Badges Mobile Money -->
       <div class="flex justify-center items-center space-x-3 py-2">
         <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-amber-400 font-bold">M-PESA</span>
         <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-orange-400 font-bold">ORANGE MONEY</span>
@@ -247,7 +216,6 @@
         <a href="https://wa.me/243983077198" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
           <i class="fa-brands fa-whatsapp"></i>
         </a>
-        <!-- Bouton Discret Créateur (@) -->
         <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
           @
         </button>
@@ -256,6 +224,17 @@
       <p class="text-[10px] text-neutral-600">&copy; 2026 URBAN MAN SHOP 2243. Tous droits réservés.</p>
     </div>
   </footer>
+
+  <!-- Modal Agrandissement / Zoom Photo -->
+  <div id="imageModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex flex-col items-center justify-center p-4">
+    <button onclick="closeImageModal()" class="absolute top-5 right-5 text-white bg-neutral-900/80 border border-neutral-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-800 transition z-50">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+    <div class="relative max-w-4xl max-h-[85vh] overflow-hidden flex items-center justify-center">
+      <img id="zoomedImage" onclick="toggleZoom()" src="" alt="Zoom" class="max-h-[80vh] max-w-full object-contain rounded-xl select-none">
+    </div>
+    <p class="text-xs text-neutral-400 mt-4 tracking-wide">Cliquez sur l'image pour zoomer / dézoomer</p>
+  </div>
 
   <!-- Modal Panier -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex justify-end">
@@ -269,9 +248,7 @@
         </button>
       </div>
 
-      <div id="cartItemsList" class="flex-grow overflow-y-auto p-4 space-y-4">
-        <!-- Articles du panier -->
-      </div>
+      <div id="cartItemsList" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
 
       <div class="p-4 border-t border-neutral-800/80 space-y-3 bg-black/60">
         <div class="flex justify-between items-center text-sm font-bold">
@@ -307,12 +284,10 @@
 
       <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
         <p class="text-xs text-neutral-300 leading-relaxed">
-          Pour effectuer votre paiement par <b>Mobile Money</b>, veuillez effectuer votre transfert vers l'un des comptes officiels ci-dessous, puis envoyez la capture d'écran par WhatsApp.
+          Pour effectuer votre paiement par <b>Mobile Money</b>, veuillez effectuer votre transfert vers l'un des comptes officiels ci-dessous, puis envoyez la capture par WhatsApp.
         </p>
 
-        <!-- Numéros Mobile Money -->
         <div class="space-y-3">
-          <!-- M-Pesa / Vodacom -->
           <div class="p-3.5 bg-neutral-900/90 border border-amber-500/30 rounded-xl flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black flex items-center justify-center text-xs">M</div>
@@ -321,12 +296,9 @@
                 <p class="text-xs font-mono text-amber-400 font-bold">+243 983 077 198</p>
               </div>
             </div>
-            <button onclick="copyToClipboard('+243983077198')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
-              Copier
-            </button>
+            <button onclick="copyToClipboard('+243983077198')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
           </div>
 
-          <!-- Orange Money -->
           <div class="p-3.5 bg-neutral-900/90 border border-orange-500/30 rounded-xl flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 font-black flex items-center justify-center text-xs">O</div>
@@ -335,12 +307,9 @@
                 <p class="text-xs font-mono text-orange-400 font-bold">+243 84 64 64 895</p>
               </div>
             </div>
-            <button onclick="copyToClipboard('+243846464895')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
-              Copier
-            </button>
+            <button onclick="copyToClipboard('+243846464895')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
           </div>
 
-          <!-- Airtel Money -->
           <div class="p-3.5 bg-neutral-900/90 border border-red-500/30 rounded-xl flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 font-black flex items-center justify-center text-xs">A</div>
@@ -349,19 +318,8 @@
                 <p class="text-xs font-mono text-red-400 font-bold">+243 82 69 14 276</p>
               </div>
             </div>
-            <button onclick="copyToClipboard('+243826914276')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
-              Copier
-            </button>
+            <button onclick="copyToClipboard('+243826914276')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
           </div>
-        </div>
-
-        <div class="p-4 bg-emerald-950/30 border border-emerald-500/30 rounded-xl space-y-2">
-          <h5 class="text-xs font-bold text-emerald-400 flex items-center">
-            <i class="fa-solid fa-circle-check mr-2"></i> Étape Finale :
-          </h5>
-          <p class="text-[11px] text-neutral-300">
-            Une fois le paiement effectué, cliquez ci-dessous pour nous envoyer votre preuve de transfert sur WhatsApp afin d'expédier votre commande immédiatement.
-          </p>
         </div>
 
         <button onclick="confirmMobileMoneyWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg">
@@ -377,19 +335,17 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion (23 Marchandises)
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Marchandises
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
-      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList">
-        <!-- Liste des 23 marchandises -->
-      </div>
+      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Noms et Prix actualisés instantanément</span>
+        <span class="text-xs text-neutral-400">Modifiez les noms et prix</span>
         <button onclick="saveCreatorData()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
           Enregistrer
         </button>
@@ -402,12 +358,11 @@
     const PHONE_NUMBER = "243983077198";
     const TOTAL_PRODUCTS = 23;
 
-    // Produits initialisés avec la structure 1.png à 23.png
     let products = JSON.parse(localStorage.getItem('ums_products_data')) || Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
       id: i + 1,
       name: `Marchandise #${i + 1}`,
       price: 0,
-      image: `assets/images/${i + 1}.png`,
+      image: `./${i + 1}.png`,
       likes: 0,
       dislikes: 0,
       userVoted: null,
@@ -454,7 +409,25 @@
       }
     }
 
-    // Affichage fluide sans cadre lourd
+    // Fonction pour ouvrir l'image en grand format
+    function openImageModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('zoomedImage');
+      img.src = imageSrc;
+      img.classList.remove('zoomed'); // Réinitialiser le zoom
+      modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Fonction pour zoomer/dézoomer au clic sur l'image agrandie
+    function toggleZoom() {
+      const img = document.getElementById('zoomedImage');
+      img.classList.toggle('zoomed');
+    }
+
     function renderProducts(itemsToRender = products) {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
@@ -464,19 +437,21 @@
         card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card transition duration-300 hover:border-neutral-700/80";
 
         card.innerHTML = `
-          <!-- Image Sans Cadre avec Glass badge -->
-          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center">
+          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Cliquer pour agrandir">
             <img src="${prod.image}" 
                  onerror="this.src='https://via.placeholder.com/400x400/050505/FFFFFF?text=Article+${prod.id}.png'" 
                  alt="${prod.name}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             
+            <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-neutral-300 border border-neutral-800">
+              <i class="fa-solid fa-expand mr-1"></i> Agrandir
+            </span>
+
             <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-neutral-800">
               ${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'}
             </span>
           </div>
 
-          <!-- Titre & Votes -->
           <div class="space-y-2 flex-grow flex flex-col justify-between">
             <div>
               <h4 class="font-bold text-sm text-white leading-snug group-hover:text-amber-400 transition">${escapeHtml(prod.name)}</h4>
@@ -493,7 +468,6 @@
               </div>
             </div>
 
-            <!-- Actions Commandes -->
             <div class="grid grid-cols-2 gap-2 pt-2">
               <button onclick="quickOrderWhatsApp(${prod.id})" class="bg-white text-black font-extrabold text-xs py-2.5 rounded-xl hover:bg-neutral-200 transition flex items-center justify-center space-x-1 shadow">
                 <i class="fa-brands fa-whatsapp text-sm"></i>
@@ -505,7 +479,6 @@
               </button>
             </div>
 
-            <!-- Accordéon Commentaires -->
             <div class="pt-1 border-t border-neutral-800/60">
               <details class="text-[11px] text-neutral-400">
                 <summary class="cursor-pointer hover:text-white flex items-center justify-between py-1">
@@ -515,7 +488,7 @@
                 
                 <div class="mt-2 space-y-2 pt-1">
                   <div class="space-y-1.5 max-h-28 overflow-y-auto">
-                    ${prod.comments.length === 0 ? '<p class="text-[10px] text-neutral-600 italic">Aucun avis laissé.</p>' : ''}
+                    ${prod.comments.length === 0 ? '<p class="text-[10px] text-neutral-600 italic">Aucun avis.</p>' : ''}
                     ${prod.comments.map(c => `
                       <div class="bg-neutral-900/90 p-2 rounded-lg text-[10px] border border-neutral-800">
                         <span class="font-bold text-amber-400">${escapeHtml(c.user)}:</span>
@@ -634,10 +607,9 @@
       saveLocalData();
       renderProducts();
       closeCreatorModal();
-      alert("Catalogue mis à jour avec succès !");
+      alert("Catalogue mis à jour !");
     }
 
-    // Panier
     function addToCart(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
@@ -667,11 +639,10 @@
     function openCart() {
       const list = document.getElementById('cartItemsList');
       list.innerHTML = '';
-
       let total = 0;
 
       if (cart.length === 0) {
-        list.innerHTML = '<p class="text-center text-neutral-500 text-xs py-10">Votre panier est actuellement vide.</p>';
+        list.innerHTML = '<p class="text-center text-neutral-500 text-xs py-10">Votre panier est vide.</p>';
       } else {
         cart.forEach(item => {
           total += item.price * item.qty;
@@ -686,9 +657,9 @@
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-700">-</button>
+              <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold">-</button>
               <span class="text-xs font-bold">${item.qty}</span>
-              <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-700">+</button>
+              <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold">+</button>
             </div>
           `;
           list.appendChild(row);
@@ -719,7 +690,7 @@
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
 
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander la marchandise :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence visuelle: ${prod.id}.png`;
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence: ${prod.id}.png`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
@@ -739,7 +710,6 @@
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // Modal Mobile Money
     function openMobileMoneyModal() {
       document.getElementById('mobileMoneyModal').classList.remove('hidden');
     }
@@ -750,15 +720,14 @@
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text);
-      alert("Numéro copié : " + text);
+      alert("Copié : " + text);
     }
 
     function confirmMobileMoneyWhatsApp() {
-      const message = "Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture d'écran de confirmation.";
+      const message = "Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture.";
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // Recherche
     function toggleSearch() {
       const container = document.getElementById('searchContainer');
       container.classList.toggle('hidden');
