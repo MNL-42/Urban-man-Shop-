@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URBAN MAN SHOP 2243</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  
+  <!-- PWA Theme Color -->
+  <meta name="theme-color" content="#050505">
+
+  <!-- Inject PWA Manifest Dynamically -->
+  <script>
+    const manifestData = {
+      "name": "URBAN MAN SHOP 2243",
+      "short_name": "UrbanMan",
+      "start_url": "./index.html",
+      "display": "standalone",
+      "background_color": "#050505",
+      "theme_color": "#050505",
+      "icons": [
+        {
+          "src": "assets/images/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "assets/images/logo.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    };
+    const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+    const manifestURL = URL.createObjectURL(manifestBlob);
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = manifestURL;
+    document.head.appendChild(link);
+  </script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#050505',
+            brandGlass: 'rgba(20, 20, 20, 0.65)',
+            brandGold: '#D4AF37',
+            brandGreen: '#10B981'
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at top, #111115 0%, #050505 100%);
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Effets de transparence Glassmorphism */
+    .glass-card {
+      background: rgba(15, 15, 18, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-nav {
+      background: rgba(5, 5, 5, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-modal {
+      background: rgba(10, 10, 12, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Gradient Text */
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #FFF 0%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Barre de défilement élégante */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222225;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between selection:bg-white selection:text-black">
+
+  <!-- En-tête / Navigation Transparent -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo et Branding -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="relative p-0.5 rounded-lg bg-gradient-to-r from-neutral-700 to-neutral-900 group-hover:from-amber-500 group-hover:to-yellow-300 transition duration-300">
+          <img src="assets/images/logo.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=UMS'" alt="Logo Urban Man Shop" class="h-10 w-10 object-contain rounded-md bg-black">
+        </div>
+        <div>
+          <h1 class="font-black text-lg tracking-wider uppercase leading-none text-white group-hover:text-amber-400 transition">URBAN MAN</h1>
+          <span class="text-[10px] text-neutral-400 font-bold tracking-[0.25em] block">SHOP 2243</span>
+        </div>
+      </a>
+
+      <!-- Actions (Recherche & Panier) -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </button>
+        <button onclick="openCart()" class="relative p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
+          <i class="fa-solid fa-bag-shopping text-sm"></i>
+          <span id="cartBadge" class="absolute -top-1 -right-1 bg-amber-400 text-black font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-black hidden">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Barre de Recherche Déroulante -->
+    <div id="searchContainer" class="hidden border-t border-neutral-800/60 bg-black/90 backdrop-blur-lg px-4 py-3">
+      <div class="max-w-6xl mx-auto flex items-center bg-neutral-900/90 border border-neutral-700/60 rounded-xl px-4 py-2.5">
+        <i class="fa-solid fa-search text-neutral-400 mr-3"></i>
+        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Rechercher un produit, vêtement, modèle..." class="bg-transparent text-sm text-white focus:outline-none w-full">
+        <button onclick="toggleSearch()" class="text-neutral-400 hover:text-white ml-2">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bannière PWA Installation -->
+  <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border-b border-neutral-800 px-4 py-2.5 flex items-center justify-between text-xs">
+    <div class="flex items-center space-x-3">
+      <i class="fa-solid fa-mobile-screen-button text-amber-400 text-base"></i>
+      <span>Installez l'application mobile <b>Urban Man Shop</b> pour un accès rapide !</span>
+    </div>
+    <button onclick="installPwa()" class="bg-white text-black font-bold px-4 py-1.5 rounded-lg hover:bg-neutral-200 transition text-xs shadow">
+      Installer
+    </button>
+  </div>
+
+  <!-- Hero Section / Message de Bienvenue Chaleureux -->
+  <section class="relative overflow-hidden pt-8 pb-6 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
+        <!-- Effet Néon d'arrière plan -->
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-2xl space-y-4">
+          <div class="inline-flex items-center space-x-2 bg-neutral-900/80 border border-neutral-700/50 px-3 py-1 rounded-full text-xs font-semibold text-amber-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Boutique Officielle Kinshasa</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight uppercase">
+            Bienvenue chez <br><span class="text-gradient-gold">Urban Man Shop 2243</span>
+          </h2>
+
+          <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed font-normal">
+            Découvrez la crème du streetwear masculin. Des collections exclusives, une qualité irréprochable et un service sur-mesure. Commandez directement en toute transparence avec livraison rapide et paiement flexible.
+          </p>
+
+          <div class="flex flex-wrap gap-3 pt-2">
+            <a href="#catalogues" class="bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-neutral-200 transition text-xs sm:text-sm flex items-center space-x-2 shadow-lg">
+              <span>Explorer la Collection</span>
+              <i class="fa-solid fa-arrow-down text-xs"></i>
+            </a>
+            <button onclick="openMobileMoneyModal()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 font-bold px-5 py-3 rounded-xl transition text-xs sm:text-sm flex items-center space-x-2">
+              <i class="fa-solid fa-mobile-retro"></i>
+              <span>Payer par Mobile Money</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenu Principal / Catalogues -->
+  <main id="catalogues" class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+    
+    <!-- Entête de Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-800/80 pb-4">
+      <div>
+        <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center">
+          <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
+          Marchandises Disponibles
+        </h3>
+        <p class="text-xs text-neutral-400 mt-0.5">23 articles exclusifs préparés pour vous</p>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs text-neutral-400">
+        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+        <span>Paiement Cash & Mobile Money</span>
+      </div>
+    </div>
+
+    <!-- Grille de Produits (Sans Cadres Lourd avec Transparence Soft) -->
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Généré dynamiquement en JS -->
+    </div>
+  </main>
+
+  <!-- Pied de page -->
+  <footer class="bg-black/80 border-t border-neutral-900/80 py-10 px-4 text-center text-xs text-neutral-500 mt-12 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto space-y-5">
+      <div class="flex flex-col items-center justify-center space-y-2">
+        <h4 class="font-black text-base text-white tracking-widest uppercase">URBAN MAN SHOP 2243</h4>
+        <p class="text-neutral-400 max-w-md">L'élégance urbaine à portée de main. Qualité premium, confiance et transparence.</p>
+      </div>
+      
+      <!-- Badges Mobile Money -->
+      <div class="flex justify-center items-center space-x-3 py-2">
+        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-amber-400 font-bold">M-PESA</span>
+        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-orange-400 font-bold">ORANGE MONEY</span>
+        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-red-400 font-bold">AIRTEL MONEY</span>
+      </div>
+
+      <div class="flex justify-center items-center space-x-5 pt-2">
+        <a href="https://wa.me/243983077198" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <!-- Bouton Discret Créateur (@) -->
+        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
+          @
+        </button>
+      </div>
+
+      <p class="text-[10px] text-neutral-600">&copy; 2026 URBAN MAN SHOP 2243. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <!-- Modal Panier -->
+  <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex justify-end">
+    <div class="glass-modal w-full max-w-md h-full flex flex-col border-l border-neutral-800">
+      <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
+        <h3 class="font-bold text-base flex items-center text-white">
+          <i class="fa-solid fa-bag-shopping mr-2 text-amber-400"></i> Mon Panier
+        </h3>
+        <button onclick="closeCart()" class="text-neutral-400 hover:text-white p-2">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div id="cartItemsList" class="flex-grow overflow-y-auto p-4 space-y-4">
+        <!-- Articles du panier -->
+      </div>
+
+      <div class="p-4 border-t border-neutral-800/80 space-y-3 bg-black/60">
+        <div class="flex justify-between items-center text-sm font-bold">
+          <span>Total Estimé :</span>
+          <span id="cartTotalPrice" class="text-xl font-extrabold text-amber-400">0 $</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 pt-1">
+          <button onclick="sendCartToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Valider sur WhatsApp</span>
+          </button>
+          <button onclick="openMobileMoneyModal()" class="w-full bg-neutral-900 border border-emerald-500/40 text-emerald-400 font-bold py-2.5 rounded-xl hover:bg-neutral-800 transition text-xs flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-mobile-retro"></i>
+            <span>Payer par Mobile Money</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Mobile Money -->
+  <div id="mobileMoneyModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-modal rounded-2xl w-full max-w-lg overflow-hidden border border-neutral-700/60 shadow-2xl">
+      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/50">
+        <h3 class="font-bold text-base flex items-center text-white">
+          <i class="fa-solid fa-mobile-retro mr-2 text-emerald-400"></i> Paiement Mobile Money
+        </h3>
+        <button onclick="closeMobileMoneyModal()" class="text-neutral-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+        <p class="text-xs text-neutral-300 leading-relaxed">
+          Pour effectuer votre paiement par <b>Mobile Money</b>, veuillez effectuer votre transfert vers l'un des comptes officiels ci-dessous, puis envoyez la capture d'écran par WhatsApp.
+        </p>
+
+        <!-- Numéros Mobile Money -->
+        <div class="space-y-3">
+          <!-- M-Pesa / Vodacom -->
+          <div class="p-3.5 bg-neutral-900/90 border border-amber-500/30 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black flex items-center justify-center text-xs">M</div>
+              <div>
+                <h4 class="font-bold text-xs text-white">M-Pesa (Vodacom)</h4>
+                <p class="text-xs font-mono text-amber-400 font-bold">+243 983 077 198</p>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('+243983077198')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
+              Copier
+            </button>
+          </div>
+
+          <!-- Orange Money -->
+          <div class="p-3.5 bg-neutral-900/90 border border-orange-500/30 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 font-black flex items-center justify-center text-xs">O</div>
+              <div>
+                <h4 class="font-bold text-xs text-white">Orange Money</h4>
+                <p class="text-xs font-mono text-orange-400 font-bold">+243 84 64 64 895</p>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('+243846464895')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
+              Copier
+            </button>
+          </div>
+
+          <!-- Airtel Money -->
+          <div class="p-3.5 bg-neutral-900/90 border border-red-500/30 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 font-black flex items-center justify-center text-xs">A</div>
+              <div>
+                <h4 class="font-bold text-xs text-white">Airtel Money</h4>
+                <p class="text-xs font-mono text-red-400 font-bold">+243 82 69 14 276</p>
+              </div>
+            </div>
+            <button onclick="copyToClipboard('+243826914276')" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded-lg border border-neutral-700">
+              Copier
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 bg-emerald-950/30 border border-emerald-500/30 rounded-xl space-y-2">
+          <h5 class="text-xs font-bold text-emerald-400 flex items-center">
+            <i class="fa-solid fa-circle-check mr-2"></i> Étape Finale :
+          </h5>
+          <p class="text-[11px] text-neutral-300">
+            Une fois le paiement effectué, cliquez ci-dessous pour nous envoyer votre preuve de transfert sur WhatsApp afin d'expédier votre commande immédiatement.
+          </p>
+        </div>
+
+        <button onclick="confirmMobileMoneyWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Confirmer le paiement sur WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Espace Créateur (@) -->
+  <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
+      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
+        <h3 class="font-bold text-base flex items-center text-white">
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion (23 Marchandises)
+        </h3>
+        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList">
+        <!-- Liste des 23 marchandises -->
+      </div>
+
+      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
+        <span class="text-xs text-neutral-400">Noms et Prix actualisés instantanément</span>
+        <button onclick="saveCreatorData()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const PHONE_NUMBER = "243983077198";
+    const TOTAL_PRODUCTS = 23;
+
+    // Produits initialisés avec la structure 1.png à 23.png
+    let products = JSON.parse(localStorage.getItem('ums_products_data')) || Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
+      id: i + 1,
+      name: `Marchandise #${i + 1}`,
+      price: 0,
+      image: `assets/images/${i + 1}.png`,
+      likes: 0,
+      dislikes: 0,
+      userVoted: null,
+      comments: []
+    }));
+
+    let cart = [];
+    let deferredPrompt = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts();
+      updateCartBadge();
+      registerServiceWorker();
+    });
+
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          self.addEventListener('install', e => self.skipWaiting());
+          self.addEventListener('activate', e => self.clients.claim());
+          self.addEventListener('fetch', e => {
+            e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+          });
+        `;
+        const blob = new Blob([swCode], { type: 'text/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW Fail:', err));
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('pwaInstallBanner').classList.remove('hidden');
+      });
+    }
+
+    function installPwa() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          document.getElementById('pwaInstallBanner').classList.add('hidden');
+        });
+      }
+    }
+
+    // Affichage fluide sans cadre lourd
+    function renderProducts(itemsToRender = products) {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+
+      itemsToRender.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card transition duration-300 hover:border-neutral-700/80";
+
+        card.innerHTML = `
+          <!-- Image Sans Cadre avec Glass badge -->
+          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center">
+            <img src="${prod.image}" 
+                 onerror="this.src='https://via.placeholder.com/400x400/050505/FFFFFF?text=Article+${prod.id}.png'" 
+                 alt="${prod.name}" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            
+            <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-neutral-800">
+              ${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'}
+            </span>
+          </div>
+
+          <!-- Titre & Votes -->
+          <div class="space-y-2 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-white leading-snug group-hover:text-amber-400 transition">${escapeHtml(prod.name)}</h4>
+              
+              <div class="flex items-center space-x-4 text-xs text-neutral-400 mt-2">
+                <button onclick="vote(${prod.id}, 'like')" class="flex items-center space-x-1 ${prod.userVoted === 'like' ? 'text-emerald-400 font-bold' : 'hover:text-white'}">
+                  <i class="fa-thumbs-up ${prod.userVoted === 'like' ? 'fa-solid' : 'fa-regular'}"></i>
+                  <span>${prod.likes}</span>
+                </button>
+                <button onclick="vote(${prod.id}, 'dislike')" class="flex items-center space-x-1 ${prod.userVoted === 'dislike' ? 'text-red-400 font-bold' : 'hover:text-white'}">
+                  <i class="fa-thumbs-down ${prod.userVoted === 'dislike' ? 'fa-solid' : 'fa-regular'}"></i>
+                  <span>${prod.dislikes}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Actions Commandes -->
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button onclick="quickOrderWhatsApp(${prod.id})" class="bg-white text-black font-extrabold text-xs py-2.5 rounded-xl hover:bg-neutral-200 transition flex items-center justify-center space-x-1 shadow">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+                <span>Commander</span>
+              </button>
+              <button onclick="addToCart(${prod.id})" class="bg-neutral-900/80 border border-neutral-700/60 text-white font-semibold text-xs py-2.5 rounded-xl hover:bg-neutral-800 transition flex items-center justify-center space-x-1">
+                <i class="fa-solid fa-cart-plus text-xs"></i>
+                <span>Panier</span>
+              </button>
+            </div>
+
+            <!-- Accordéon Commentaires -->
+            <div class="pt-1 border-t border-neutral-800/60">
+              <details class="text-[11px] text-neutral-400">
+                <summary class="cursor-pointer hover:text-white flex items-center justify-between py-1">
+                  <span><i class="fa-regular fa-comments mr-1"></i> Avis (${prod.comments.length})</span>
+                  <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                </summary>
+                
+                <div class="mt-2 space-y-2 pt-1">
+                  <div class="space-y-1.5 max-h-28 overflow-y-auto">
+                    ${prod.comments.length === 0 ? '<p class="text-[10px] text-neutral-600 italic">Aucun avis laissé.</p>' : ''}
+                    ${prod.comments.map(c => `
+                      <div class="bg-neutral-900/90 p-2 rounded-lg text-[10px] border border-neutral-800">
+                        <span class="font-bold text-amber-400">${escapeHtml(c.user)}:</span>
+                        <span class="text-neutral-300">${escapeHtml(c.text)}</span>
+                      </div>
+                    `).join('')}
+                  </div>
+
+                  <div class="flex flex-col space-y-1 pt-1">
+                    <input type="text" id="commentUser-${prod.id}" placeholder="Votre nom" class="bg-neutral-900 border border-neutral-800 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none">
+                    <div class="flex space-x-1">
+                      <input type="text" id="commentText-${prod.id}" placeholder="Votre commentaire..." class="bg-neutral-900 border border-neutral-800 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none flex-grow">
+                      <button onclick="addComment(${prod.id})" class="bg-neutral-800 hover:bg-neutral-700 text-white px-2.5 py-1 rounded-lg text-[10px]">
+                        Poster
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function vote(productId, type) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      if (prod.userVoted === type) {
+        if (type === 'like') prod.likes--;
+        if (type === 'dislike') prod.dislikes--;
+        prod.userVoted = null;
+      } else {
+        if (prod.userVoted === 'like') prod.likes--;
+        if (prod.userVoted === 'dislike') prod.dislikes--;
+
+        if (type === 'like') prod.likes++;
+        if (type === 'dislike') prod.dislikes++;
+        prod.userVoted = type;
+      }
+
+      saveLocalData();
+      renderProducts();
+    }
+
+    function addComment(productId) {
+      const userField = document.getElementById(`commentUser-${productId}`);
+      const textField = document.getElementById(`commentText-${productId}`);
+
+      const user = userField.value.trim() || "Client";
+      const text = textField.value.trim();
+
+      if (!text) return;
+
+      const prod = products.find(p => p.id === productId);
+      if (prod) {
+        prod.comments.push({ user, text });
+        saveLocalData();
+        renderProducts();
+      }
+    }
+
+    function promptCreatorAccess() {
+      const code = prompt("Mot de passe Espace Créateur :");
+      if (code === "mnl" || code === "@mnl@" || code === "@@mnl@@") {
+        openCreatorModal();
+      } else if (code !== null) {
+        alert("Accès refusé.");
+      }
+    }
+
+    function openCreatorModal() {
+      const container = document.getElementById('creatorProductsList');
+      container.innerHTML = '';
+
+      products.forEach(p => {
+        const row = document.createElement('div');
+        row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
+        row.innerHTML = `
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="this.src='https://via.placeholder.com/40'">
+            <span class="text-xs font-mono text-neutral-400">#${p.id}</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
+            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom de la marchandise" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+            <div class="flex items-center space-x-1 w-full sm:w-32">
+              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+              <span class="text-xs font-bold text-amber-400">$</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById('creatorModal').classList.remove('hidden');
+    }
+
+    function closeCreatorModal() {
+      document.getElementById('creatorModal').classList.add('hidden');
+    }
+
+    function saveCreatorData() {
+      products.forEach(p => {
+        const nameInput = document.getElementById(`creator-name-${p.id}`);
+        const priceInput = document.getElementById(`creator-price-${p.id}`);
+
+        if (nameInput && priceInput) {
+          p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
+          p.price = parseFloat(priceInput.value) || 0;
+        }
+      });
+
+      saveLocalData();
+      renderProducts();
+      closeCreatorModal();
+      alert("Catalogue mis à jour avec succès !");
+    }
+
+    // Panier
+    function addToCart(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...prod, qty: 1 });
+      }
+
+      updateCartBadge();
+      openCart();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartBadge');
+      const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+      if (totalItems > 0) {
+        badge.textContent = totalItems;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function openCart() {
+      const list = document.getElementById('cartItemsList');
+      list.innerHTML = '';
+
+      let total = 0;
+
+      if (cart.length === 0) {
+        list.innerHTML = '<p class="text-center text-neutral-500 text-xs py-10">Votre panier est actuellement vide.</p>';
+      } else {
+        cart.forEach(item => {
+          total += item.price * item.qty;
+          const row = document.createElement('div');
+          row.className = "flex items-center justify-between bg-neutral-900/80 p-3 rounded-xl border border-neutral-800";
+          row.innerHTML = `
+            <div class="flex items-center space-x-3">
+              <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg bg-black" onerror="this.src='https://via.placeholder.com/50'">
+              <div>
+                <h5 class="text-xs font-bold text-white">${escapeHtml(item.name)}</h5>
+                <p class="text-xs text-amber-400 font-semibold">${item.price} $ x ${item.qty}</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-700">-</button>
+              <span class="text-xs font-bold">${item.qty}</span>
+              <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-700">+</button>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      document.getElementById('cartTotalPrice').textContent = total + ' $';
+      document.getElementById('cartModal').classList.remove('hidden');
+    }
+
+    function closeCart() {
+      document.getElementById('cartModal').classList.add('hidden');
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      }
+      updateCartBadge();
+      openCart();
+    }
+
+    function quickOrderWhatsApp(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander la marchandise :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence visuelle: ${prod.id}.png`;
+      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function sendCartToWhatsApp() {
+      if (cart.length === 0) return;
+
+      let message = "Bonjour Urban Man Shop 2243, voici ma commande :\n\n";
+      let total = 0;
+
+      cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n`;
+      });
+
+      message += `\n*Total Estimé:* ${total} $\nMerci de me confirmer la disponibilité !`;
+      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // Modal Mobile Money
+    function openMobileMoneyModal() {
+      document.getElementById('mobileMoneyModal').classList.remove('hidden');
+    }
+
+    function closeMobileMoneyModal() {
+      document.getElementById('mobileMoneyModal').classList.add('hidden');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      alert("Numéro copié : " + text);
+    }
+
+    function confirmMobileMoneyWhatsApp() {
+      const message = "Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture d'écran de confirmation.";
+      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // Recherche
+    function toggleSearch() {
+      const container = document.getElementById('searchContainer');
+      container.classList.toggle('hidden');
+      if (!container.classList.contains('hidden')) {
+        document.getElementById('searchInput').focus();
+      }
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      renderProducts(filtered);
+    }
+
+    function saveLocalData() {
+      localStorage.setItem('ums_products_data', JSON.stringify(products));
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
