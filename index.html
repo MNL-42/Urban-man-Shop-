@@ -71,7 +71,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Zoom fluide pour la visionneuse */
     #zoomedImage {
       transition: transform 0.3s ease;
       cursor: zoom-in;
@@ -335,30 +334,53 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Marchandises
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Sélection Galerie & Cloud
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
+      <!-- Bouton pour choisir une photo depuis la galerie du téléphone -->
+      <div class="p-4 bg-neutral-900/80 border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-xs text-neutral-300 font-semibold">Choisir une photo depuis la galerie :</span>
+        <input type="file" id="galleryFileInput" accept="image/*" onchange="handleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
+      </div>
+
       <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Modifiez les noms et prix</span>
-        <button onclick="saveCreatorData()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
-          Enregistrer
+        <span class="text-xs text-neutral-400">Synchronisé en direct sur tous les téléphones</span>
+        <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+          Enregistrer sur le Cloud
         </button>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
-  <script>
+  <!-- Firebase SDKs & Script Principal -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcoR5yMTMY_ittDm3T9OakjMOP1CAV-0s",
+      authDomain: "urban-man-shop.firebaseapp.com",
+      projectId: "urban-man-shop",
+      storageBucket: "urban-man-shop.firebasestorage.app",
+      messagingSenderId: "301517686635",
+      appId: "1:301517686635:web:053f90fa4e472103c12e2e",
+      measurementId: "G-YS761W6CX2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const PHONE_NUMBER = "243983077198";
     const TOTAL_PRODUCTS = 23;
 
-    let products = JSON.parse(localStorage.getItem('ums_products_data')) || Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
+    // Produits initiaux (1.png à 23.png)
+    let products = Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
       id: i + 1,
       name: `Marchandise #${i + 1}`,
       price: 0,
@@ -372,11 +394,81 @@
     let cart = [];
     let deferredPrompt = null;
 
-    document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", async () => {
+      await loadProductsFromCloud();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
     });
+
+    async function loadProductsFromCloud() {
+      try {
+        const docRef = doc(db, "shop", "catalog");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          products = docSnap.data().items;
+        } else {
+          await setDoc(docRef, { items: products });
+        }
+      } catch (e) {
+        console.log("Erreur cloud, chargement local:", e);
+        const local = localStorage.getItem('ums_products_data');
+        if (local) products = JSON.parse(local);
+      }
+    }
+
+    window.saveCreatorDataToCloud = async function() {
+      try {
+        products.forEach(p => {
+          const nameInput = document.getElementById(`creator-name-${p.id}`);
+          const priceInput = document.getElementById(`creator-price-${p.id}`);
+          if (nameInput && priceInput) {
+            p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
+            p.price = parseFloat(priceInput.value) || 0;
+          }
+        });
+
+        const docRef = doc(db, "shop", "catalog");
+        await setDoc(docRef, { items: products });
+
+        localStorage.setItem('ums_products_data', JSON.stringify(products));
+        renderProducts();
+        closeCreatorModal();
+        alert("Modifications enregistrées et publiées pour tous les téléphones !");
+      } catch (e) {
+        alert("Erreur cloud : " + e.message);
+      }
+    };
+
+    // Gestion de l'upload direct depuis la galerie du téléphone
+    window.handleGalleryUpload = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(uploadEvent) {
+        const base64Image = uploadEvent.target.result;
+        const name = prompt("Nom de cette nouvelle marchandise :") || "Nouvel Article";
+        const price = parseFloat(prompt("Prix en $ :")) || 0;
+
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        const newProd = {
+          id: newId,
+          name: name,
+          price: price,
+          image: base64Image, // Image convertie stockée dans Firebase
+          likes: 0,
+          dislikes: 0,
+          userVoted: null,
+          comments: []
+        };
+
+        products.push(newProd);
+        await saveCreatorDataToCloud();
+        openCreatorModal();
+      };
+      reader.readAsDataURL(file);
+    };
 
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
@@ -388,8 +480,7 @@
           });
         `;
         const blob = new Blob([swCode], { type: 'text/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW Fail:', err));
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log('SW Fail:', err));
       }
 
       window.addEventListener('beforeinstallprompt', (e) => {
@@ -399,7 +490,7 @@
       });
     }
 
-    function installPwa() {
+    window.installPwa = function() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(() => {
@@ -409,23 +500,20 @@
       }
     }
 
-    // Fonction pour ouvrir l'image en grand format
-    function openImageModal(imageSrc) {
+    window.openImageModal = function(imageSrc) {
       const modal = document.getElementById('imageModal');
       const img = document.getElementById('zoomedImage');
       img.src = imageSrc;
-      img.classList.remove('zoomed'); // Réinitialiser le zoom
+      img.classList.remove('zoomed');
       modal.classList.remove('hidden');
     }
 
-    function closeImageModal() {
+    window.closeImageModal = function() {
       document.getElementById('imageModal').classList.add('hidden');
     }
 
-    // Fonction pour zoomer/dézoomer au clic sur l'image agrandie
-    function toggleZoom() {
-      const img = document.getElementById('zoomedImage');
-      img.classList.toggle('zoomed');
+    window.toggleZoom = function() {
+      document.getElementById('zoomedImage').classList.toggle('zoomed');
     }
 
     function renderProducts(itemsToRender = products) {
@@ -437,9 +525,9 @@
         card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card transition duration-300 hover:border-neutral-700/80";
 
         card.innerHTML = `
-          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Cliquer pour agrandir">
+          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
             <img src="${prod.image}" 
-                 onerror="this.src='https://via.placeholder.com/400x400/050505/FFFFFF?text=Article+${prod.id}.png'" 
+                 onerror="this.src='https://via.placeholder.com/400x400/050505/FFFFFF?text=Article+${prod.id}'" 
                  alt="${prod.name}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             
@@ -515,7 +603,7 @@
       });
     }
 
-    function vote(productId, type) {
+    window.vote = function(productId, type) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
 
@@ -526,39 +614,34 @@
       } else {
         if (prod.userVoted === 'like') prod.likes--;
         if (prod.userVoted === 'dislike') prod.dislikes--;
-
         if (type === 'like') prod.likes++;
         if (type === 'dislike') prod.dislikes++;
         prod.userVoted = type;
       }
-
-      saveLocalData();
       renderProducts();
     }
 
-    function addComment(productId) {
+    window.addComment = function(productId) {
       const userField = document.getElementById(`commentUser-${productId}`);
       const textField = document.getElementById(`commentText-${productId}`);
-
       const user = userField.value.trim() || "Client";
       const text = textField.value.trim();
-
       if (!text) return;
 
       const prod = products.find(p => p.id === productId);
       if (prod) {
         prod.comments.push({ user, text });
-        saveLocalData();
         renderProducts();
       }
     }
 
-    function promptCreatorAccess() {
+    // Gestion des mots de passe multiples
+    window.promptCreatorAccess = function() {
       const code = prompt("Mot de passe Espace Créateur :");
-      if (code === "mnl" || code === "@mnl@" || code === "@@mnl@@") {
+      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
         openCreatorModal();
       } else if (code !== null) {
-        alert("Accès refusé.");
+        alert("Mot de passe incorrect.");
       }
     }
 
@@ -576,7 +659,7 @@
           </div>
 
           <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
-            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom de la marchandise" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
             <div class="flex items-center space-x-1 w-full sm:w-32">
               <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
               <span class="text-xs font-bold text-amber-400">$</span>
@@ -589,28 +672,11 @@
       document.getElementById('creatorModal').classList.remove('hidden');
     }
 
-    function closeCreatorModal() {
+    window.closeCreatorModal = function() {
       document.getElementById('creatorModal').classList.add('hidden');
     }
 
-    function saveCreatorData() {
-      products.forEach(p => {
-        const nameInput = document.getElementById(`creator-name-${p.id}`);
-        const priceInput = document.getElementById(`creator-price-${p.id}`);
-
-        if (nameInput && priceInput) {
-          p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
-          p.price = parseFloat(priceInput.value) || 0;
-        }
-      });
-
-      saveLocalData();
-      renderProducts();
-      closeCreatorModal();
-      alert("Catalogue mis à jour !");
-    }
-
-    function addToCart(productId) {
+    window.addToCart = function(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
 
@@ -620,7 +686,6 @@
       } else {
         cart.push({ ...prod, qty: 1 });
       }
-
       updateCartBadge();
       openCart();
     }
@@ -636,7 +701,7 @@
       }
     }
 
-    function openCart() {
+    window.openCart = function() {
       const list = document.getElementById('cartItemsList');
       list.innerHTML = '';
       let total = 0;
@@ -670,80 +735,67 @@
       document.getElementById('cartModal').classList.remove('hidden');
     }
 
-    function closeCart() {
+    window.closeCart = function() {
       document.getElementById('cartModal').classList.add('hidden');
     }
 
-    function changeQty(productId, delta) {
+    window.changeQty = function(productId, delta) {
       const item = cart.find(i => i.id === productId);
       if (!item) return;
-
       item.qty += delta;
-      if (item.qty <= 0) {
-        cart = cart.filter(i => i.id !== productId);
-      }
+      if (item.qty <= 0) cart = cart.filter(i => i.id !== productId);
       updateCartBadge();
       openCart();
     }
 
-    function quickOrderWhatsApp(productId) {
+    window.quickOrderWhatsApp = function(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
-
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence: ${prod.id}.png`;
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence article #${prod.id}`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    function sendCartToWhatsApp() {
+    window.sendCartToWhatsApp = function() {
       if (cart.length === 0) return;
-
       let message = "Bonjour Urban Man Shop 2243, voici ma commande :\n\n";
       let total = 0;
-
       cart.forEach(item => {
         const subtotal = item.price * item.qty;
         total += subtotal;
         message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n`;
       });
-
       message += `\n*Total Estimé:* ${total} $\nMerci de me confirmer la disponibilité !`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    function openMobileMoneyModal() {
+    window.openMobileMoneyModal = function() {
       document.getElementById('mobileMoneyModal').classList.remove('hidden');
     }
 
-    function closeMobileMoneyModal() {
+    window.closeMobileMoneyModal = function() {
       document.getElementById('mobileMoneyModal').classList.add('hidden');
     }
 
-    function copyToClipboard(text) {
+    window.copyToClipboard = function(text) {
       navigator.clipboard.writeText(text);
       alert("Copié : " + text);
     }
 
-    function confirmMobileMoneyWhatsApp() {
+    window.confirmMobileMoneyWhatsApp = function() {
       const message = "Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture.";
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    function toggleSearch() {
+    window.toggleSearch = function() {
       const container = document.getElementById('searchContainer');
       container.classList.toggle('hidden');
-      if (!container.classList.contains('hidden')) {
-        document.getElementById('searchInput').focus();
-      }
+      if (!container.classList.contains('hidden')) document.getElementById('searchInput').focus();
     }
 
-    function filterProducts() {
+    window.filterProducts = function() {
       const query = document.getElementById('searchInput').value.toLowerCase().trim();
       const filtered = products.filter(p => p.name.toLowerCase().includes(query));
       renderProducts(filtered);
-    }
-
-    function saveLocalData() {
-      localStorage.setItem('ums_products_data', JSON.stringify(products));
     }
 
     function escapeHtml(text) {
