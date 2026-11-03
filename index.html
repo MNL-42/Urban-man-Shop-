@@ -44,31 +44,53 @@
     }
 
     .glass-card {
-      background: rgba(15, 15, 18, 0.6);
+      background: rgba(15, 15, 18, 0.65);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.3);
     }
 
     .glass-nav {
-      background: rgba(5, 5, 5, 0.8);
+      background: rgba(5, 5, 5, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .glass-modal {
-      background: rgba(10, 10, 12, 0.95);
+      background: rgba(10, 10, 12, 0.96);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .text-gradient-gold {
       background: linear-gradient(135deg, #FFF 0%, #D4AF37 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    /* Animations fluides */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.5); }
+    }
+    .animate-glow {
+      animation: pulseGlow 3s infinite;
     }
 
     #zoomedImage {
@@ -92,7 +114,7 @@
     }
   </style>
 </head>
-<body class="flex flex-col justify-between selection:bg-white selection:text-black">
+<body class="flex flex-col justify-between selection:bg-amber-400 selection:text-black">
 
   <!-- En-tête / Navigation -->
   <header class="sticky top-0 z-40 glass-nav transition-all">
@@ -108,8 +130,7 @@
       </a>
 
       <div class="flex items-center space-x-2.5">
-        <!-- Bouton Créateur discret en haut -->
-        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-500 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs">
+        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs shadow">
           @
         </button>
         <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
@@ -144,10 +165,10 @@
     </button>
   </div>
 
-  <!-- Hero Section Chaleureux -->
+  <!-- Hero Section -->
   <section class="relative overflow-hidden pt-8 pb-6 px-4">
     <div class="max-w-6xl mx-auto">
-      <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
+      <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden animate-glow">
         <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -left-10 -top-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -162,7 +183,7 @@
           </h2>
 
           <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed">
-            Découvrez la crème du streetwear masculin. Des collections exclusives, une qualité irréprochable et un service sur-mesure. Commandez directement en toute transparence avec livraison rapide et paiement flexible.
+            Découvrez la crème du streetwear masculin. Des collections exclusives, une qualité irréprochable et un service sur-mesure. Commandez directement en toute transparence.
           </p>
 
           <div class="flex flex-wrap gap-3 pt-2">
@@ -170,9 +191,9 @@
               <span>Explorer la Collection</span>
               <i class="fa-solid fa-arrow-down text-xs"></i>
             </a>
-            <button onclick="openMobileMoneyModal()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 font-bold px-5 py-3 rounded-xl transition text-xs sm:text-sm flex items-center space-x-2">
-              <i class="fa-solid fa-mobile-retro"></i>
-              <span>Payer par Mobile Money</span>
+            <button onclick="openTombolaModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/40 font-bold px-5 py-3 rounded-xl transition text-xs sm:text-sm flex items-center space-x-2 animate-pulse">
+              <i class="fa-solid fa-gift"></i>
+              <span>Participer à la Tombola !</span>
             </button>
           </div>
         </div>
@@ -228,6 +249,40 @@
     </div>
   </footer>
 
+  <!-- Modal Tombola Animée -->
+  <div id="tombolaModal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-modal rounded-3xl w-full max-w-md overflow-hidden border border-amber-500/40 shadow-2xl animate-fade-in relative">
+      <div class="absolute -right-12 -top-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/60">
+        <h3 class="font-bold text-sm flex items-center text-amber-400">
+          <i class="fa-solid fa-gift mr-2 animate-bounce"></i> Grande Tombola Urban Man Shop
+        </h3>
+        <button onclick="closeTombolaModal()" class="text-neutral-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 text-center space-y-4">
+        <div class="relative overflow-hidden rounded-2xl aspect-video bg-neutral-950 border border-neutral-800 shadow-inner">
+          <img src="./B.jpg" onerror="this.src='https://via.placeholder.com/500x300/111/D4AF37?text=Tombola+Urban+Man'" alt="Tombola B.jpg" class="w-full h-full object-cover">
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-base text-white uppercase tracking-wide">Tentez de remporter vos articles !</h4>
+          <p class="text-xs text-neutral-300 leading-relaxed">
+            Chaque heure, Urban Man Shop gâte ses clients ! Cliquez ci-dessous pour valider votre participation et tenter de gagner des pièces exclusives de notre collection.
+          </p>
+        </div>
+
+        <button onclick="participateTombola()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black py-3 rounded-xl transition text-xs shadow-lg flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-ticket"></i>
+          <span>Je participe à la Tombola !</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Agrandissement / Zoom Photo -->
   <div id="imageModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex flex-col items-center justify-center p-4">
     <button onclick="closeImageModal()" class="absolute top-5 right-5 text-white bg-neutral-900/80 border border-neutral-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-800 transition z-50">
@@ -262,7 +317,7 @@
         <div class="grid grid-cols-1 gap-2 pt-1">
           <button onclick="sendCartToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg">
             <i class="fa-brands fa-whatsapp text-lg"></i>
-            <span>Valider sur WhatsApp</span>
+            <span>Valider sur WhatsApp (avec images)</span>
           </button>
           <button onclick="openMobileMoneyModal()" class="w-full bg-neutral-900 border border-emerald-500/40 text-emerald-400 font-bold py-2.5 rounded-xl hover:bg-neutral-800 transition text-xs flex items-center justify-center space-x-2">
             <i class="fa-solid fa-mobile-retro"></i>
@@ -333,28 +388,28 @@
     </div>
   </div>
 
-  <!-- Modal Espace Créateur (@) -->
+  <!-- Modal Espace Créateur (@) avec Ajout Groupé de 100 photos -->
   <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Sélection Galerie & Cloud
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Ajout Groupé (jusqu'à 100 photos)
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
-      <!-- Bouton pour choisir une photo depuis la galerie du téléphone -->
+      <!-- Bouton d'upload multiple (jusqu'à 100 photos en un clic) -->
       <div class="p-4 bg-neutral-900/80 border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs text-neutral-300 font-semibold">Choisir une photo depuis la galerie :</span>
-        <input type="file" id="galleryFileInput" accept="image/*" onchange="handleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
+        <span class="text-xs text-neutral-300 font-semibold">Sélectionner jusqu'à 100 photos :</span>
+        <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleMultipleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
       </div>
 
       <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Synchronisé en direct sur tous les téléphones</span>
+        <span class="text-xs text-neutral-400">Modifiez les prix et enregistrez</span>
         <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
           Enregistrer sur le Cloud
         </button>
@@ -385,9 +440,9 @@
     const db = getFirestore(app);
 
     const PHONE_NUMBER = "243818658932";
-    const TOTAL_PRODUCTS = 23;
+    const INITIAL_PRODUCTS = 23;
 
-    let products = Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
+    let products = Array.from({ length: INITIAL_PRODUCTS }, (_, i) => ({
       id: i + 1,
       name: `Marchandise #${i + 1}`,
       price: 0,
@@ -407,22 +462,30 @@
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
+
+      // Déclenchement automatique de la Tombola toutes les heures (ou après 1 heure)
+      setInterval(() => {
+        openTombolaModal();
+      }, 3600000); // 1 heure en millisecondes
+
+      // Première apparition de la tombola après 5 secondes pour l'effet immédiat
+      setTimeout(() => {
+        openTombolaModal();
+      }, 5000);
     });
 
-    // Demander l'autorisation d'afficher les notifications PWA
     function requestNotificationPermission() {
       if ("Notification" in window && Notification.permission !== "granted") {
         Notification.requestPermission();
       }
     }
 
-    // Déclencher une notification avec le logo de l'app lors d'une nouveauté
     function sendNewProductNotification(productName) {
       if ("Notification" in window && Notification.permission === "granted") {
         try {
           navigator.serviceWorker.ready.then(registration => {
             registration.showNotification("URBAN MAN SHOP 2243", {
-              body: `✨ Nouveau produit publié : ${productName} ! Venez découvrir le style.`,
+              body: `✨ Nouveau produit publié : ${productName} !`,
               icon: "./logo.png",
               badge: "./logo.png",
               vibrate: [200, 100, 200]
@@ -441,7 +504,7 @@
 
     async function loadProductsFromCloud() {
       try {
-        const docRef = doc(db, "shop", "catalog");
+        const docRef = doc(db, "shop", "catalog_v2");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           products = docSnap.data().items;
@@ -450,7 +513,7 @@
         }
       } catch (e) {
         console.log("Erreur cloud, chargement local:", e);
-        const local = localStorage.getItem('ums_products_data');
+        const local = localStorage.getItem('ums_products_data_v2');
         if (local) products = JSON.parse(local);
       }
     }
@@ -466,10 +529,10 @@
           }
         });
 
-        const docRef = doc(db, "shop", "catalog");
+        const docRef = doc(db, "shop", "catalog_v2");
         await setDoc(docRef, { items: products });
 
-        localStorage.setItem('ums_products_data', JSON.stringify(products));
+        localStorage.setItem('ums_products_data_v2', JSON.stringify(products));
         renderProducts();
         closeCreatorModal();
         alert("Modifications enregistrées et publiées pour tous les téléphones !");
@@ -478,37 +541,44 @@
       }
     };
 
-    window.handleGalleryUpload = function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+    // Gestion de l'ajout groupé jusqu'à 100 photos en un clic
+    window.handleMultipleGalleryUpload = async function(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
 
-      const reader = new FileReader();
-      reader.onload = async function(uploadEvent) {
-        const base64Image = uploadEvent.target.result;
-        const name = prompt("Nom de cette nouvelle marchandise :") || "Nouvel Article";
-        const price = parseFloat(prompt("Prix en $ :")) || 0;
+      const maxFiles = Math.min(files.length, 100);
+      let loadedCount = 0;
 
-        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-        const newProd = {
-          id: newId,
-          name: name,
-          price: price,
-          image: base64Image,
-          likes: 0,
-          dislikes: 0,
-          userVoted: null,
-          comments: []
-        };
-
-        products.push(newProd);
-        await saveCreatorDataToCloud();
+      for (let i = 0; i < maxFiles; i++) {
+        const file = files[i];
+        const reader = new FileReader();
         
-        // Envoi de la notification PWA de nouveau produit
-        sendNewProductNotification(name);
+        reader.onload = async function(uploadEvent) {
+          const base64Image = uploadEvent.target.result;
+          const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+          
+          const newProd = {
+            id: newId,
+            name: `Marchandise #${newId}`,
+            price: 0,
+            image: base64Image,
+            likes: 0,
+            dislikes: 0,
+            userVoted: null,
+            comments: []
+          };
 
-        openCreatorModal();
-      };
-      reader.readAsDataURL(file);
+          products.push(newProd);
+          loadedCount++;
+
+          if (loadedCount === maxFiles) {
+            await saveCreatorDataToCloud();
+            alert(`${maxFiles} photos ajoutées avec succès ! Vous pouvez maintenant modifier leurs noms et prix.`);
+            openCreatorModal();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
     };
 
     function registerServiceWorker() {
@@ -557,13 +627,27 @@
       document.getElementById('zoomedImage').classList.toggle('zoomed');
     }
 
+    window.openTombolaModal = function() {
+      document.getElementById('tombolaModal').classList.remove('hidden');
+    }
+
+    window.closeTombolaModal = function() {
+      document.getElementById('tombolaModal').classList.add('hidden');
+    }
+
+    window.participateTombola = function() {
+      const msg = "Bonjour Urban Man Shop 2243, je participe à la Tombola de la boutique ! Voici ma participation.";
+      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+      closeTombolaModal();
+    }
+
     function renderProducts(itemsToRender = products) {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
 
       itemsToRender.forEach(prod => {
         const card = document.createElement('div');
-        card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card transition duration-300 hover:border-neutral-700/80";
+        card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card";
 
         card.innerHTML = `
           <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
@@ -788,10 +872,15 @@
       openCart();
     }
 
+    // Inclusion du lien / aperçu de l'image de l'article commandé sur WhatsApp
     window.quickOrderWhatsApp = function(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\n\nRéférence article #${prod.id}`;
+      
+      // Si l'image est en base64 ou URL externe, on l'inclut dans le message WhatsApp
+      const imagePreview = prod.image.startsWith('data:') ? "[Image de l'article inclue dans l'app]" : prod.image;
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nLien/Aperçu photo: ${imagePreview}`;
+      
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
@@ -802,7 +891,7 @@
       cart.forEach(item => {
         const subtotal = item.price * item.qty;
         total += subtotal;
-        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n`;
+        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n  Photo: ${item.image.startsWith('data:') ? '[Article]' : item.image}\n`;
       });
       message += `\n*Total Estimé:* ${total} $\nMerci de me confirmer la disponibilité !`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
