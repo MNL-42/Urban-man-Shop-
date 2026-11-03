@@ -140,7 +140,7 @@
     </button>
   </div>
 
-  <!-- Hero Section Chaleureux -->
+  <!-- Hero Section Chaleureux avec le nouveau slogan -->
   <section class="relative overflow-hidden pt-8 pb-6 px-4">
     <div class="max-w-6xl mx-auto">
       <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
@@ -150,7 +150,7 @@
         <div class="relative z-10 max-w-2xl space-y-4">
           <div class="inline-flex items-center space-x-2 bg-neutral-900/80 border border-neutral-700/50 px-3 py-1 rounded-full text-xs font-semibold text-amber-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Boutique Officielle Kinshasa</span>
+            <span>Style respect qualité • Si tu veux t'imposer c'est ici que ça se passe</span>
           </div>
 
           <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight uppercase">
@@ -202,7 +202,7 @@
     <div class="max-w-6xl mx-auto space-y-5">
       <div class="flex flex-col items-center justify-center space-y-2">
         <h4 class="font-black text-base text-white tracking-widest uppercase">URBAN MAN SHOP 2243</h4>
-        <p class="text-neutral-400 max-w-md">L'élégance urbaine à portée de main.</p>
+        <p class="text-neutral-400 max-w-md">Style, respect, qualité : si tu veux t'imposer, c'est ici que ça se passe.</p>
       </div>
       
       <div class="flex justify-center items-center space-x-3 py-2">
@@ -212,7 +212,7 @@
       </div>
 
       <div class="flex justify-center items-center space-x-5 pt-2">
-        <a href="https://wa.me/243983077198" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
+        <a href="https://wa.me/243818658932" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
           <i class="fa-brands fa-whatsapp"></i>
         </a>
         <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
@@ -292,10 +292,10 @@
               <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black flex items-center justify-center text-xs">M</div>
               <div>
                 <h4 class="font-bold text-xs text-white">M-Pesa (Vodacom)</h4>
-                <p class="text-xs font-mono text-amber-400 font-bold">+243 983 077 198</p>
+                <p class="text-xs font-mono text-amber-400 font-bold">+243 81 86 58 932</p>
               </div>
             </div>
-            <button onclick="copyToClipboard('+243983077198')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
+            <button onclick="copyToClipboard('+243818658932')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
           </div>
 
           <div class="p-3.5 bg-neutral-900/90 border border-orange-500/30 rounded-xl flex items-center justify-between">
@@ -363,7 +363,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Sécurisation anti-alerte GitHub (Assemblage dynamique des fragments de clé)
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
     const p3 = "jMOP1CAV-0s";
@@ -381,7 +380,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const PHONE_NUMBER = "243983077198";
+    const PHONE_NUMBER = "243818658932";
     const TOTAL_PRODUCTS = 23;
 
     let products = Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
