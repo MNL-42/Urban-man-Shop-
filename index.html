@@ -107,7 +107,11 @@
         </div>
       </a>
 
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2.5">
+        <!-- Bouton Créateur discret en haut -->
+        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-500 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs">
+          @
+        </button>
         <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
           <i class="fa-solid fa-magnifying-glass text-sm"></i>
         </button>
@@ -140,7 +144,7 @@
     </button>
   </div>
 
-  <!-- Hero Section Chaleureux avec le nouveau slogan -->
+  <!-- Hero Section Chaleureux -->
   <section class="relative overflow-hidden pt-8 pb-6 px-4">
     <div class="max-w-6xl mx-auto">
       <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden">
@@ -398,11 +402,42 @@
     let deferredPrompt = null;
 
     window.addEventListener("DOMContentLoaded", async () => {
+      requestNotificationPermission();
       await loadProductsFromCloud();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
     });
+
+    // Demander l'autorisation d'afficher les notifications PWA
+    function requestNotificationPermission() {
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+    }
+
+    // Déclencher une notification avec le logo de l'app lors d'une nouveauté
+    function sendNewProductNotification(productName) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification("URBAN MAN SHOP 2243", {
+              body: `✨ Nouveau produit publié : ${productName} ! Venez découvrir le style.`,
+              icon: "./logo.png",
+              badge: "./logo.png",
+              vibrate: [200, 100, 200]
+            });
+          }).catch(() => {
+            new Notification("URBAN MAN SHOP 2243", {
+              body: `✨ Nouveau produit publié : ${productName} !`,
+              icon: "./logo.png"
+            });
+          });
+        } catch (e) {
+          console.log("Notification error:", e);
+        }
+      }
+    }
 
     async function loadProductsFromCloud() {
       try {
@@ -467,6 +502,10 @@
 
         products.push(newProd);
         await saveCreatorDataToCloud();
+        
+        // Envoi de la notification PWA de nouveau produit
+        sendNewProductNotification(name);
+
         openCreatorModal();
       };
       reader.readAsDataURL(file);
