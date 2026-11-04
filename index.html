@@ -76,7 +76,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Animations fluides */
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
@@ -388,21 +387,20 @@
     </div>
   </div>
 
-  <!-- Modal Espace Créateur (@) avec Ajout Groupé de 100 photos -->
+  <!-- Modal Espace Créateur (@) avec Sauvegarde Indépendante -->
   <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Ajout Groupé (jusqu'à 100 photos)
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Ajout Groupé (Sans Limite)
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
-      <!-- Bouton d'upload multiple (jusqu'à 100 photos en un clic) -->
       <div class="p-4 bg-neutral-900/80 border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs text-neutral-300 font-semibold">Sélectionner jusqu'à 100 photos :</span>
+        <span class="text-xs text-neutral-300 font-semibold">Sélectionner plusieurs photos :</span>
         <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleMultipleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
       </div>
 
@@ -420,7 +418,7 @@
   <!-- Firebase SDKs & Script Principal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
@@ -463,12 +461,10 @@
       updateCartBadge();
       registerServiceWorker();
 
-      // Déclenchement automatique de la Tombola toutes les heures (ou après 1 heure)
       setInterval(() => {
         openTombolaModal();
-      }, 3600000); // 1 heure en millisecondes
+      }, 3600000);
 
-      // Première apparition de la tombola après 5 secondes pour l'effet immédiat
       setTimeout(() => {
         openTombolaModal();
       }, 5000);
@@ -502,46 +498,54 @@
       }
     }
 
+    // Chargement de chaque produit de manière indépendante depuis Firestore
     async function loadProductsFromCloud() {
       try {
-        const docRef = doc(db, "shop", "catalog_v2");
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          products = docSnap.data().items;
+        const querySnapshot = await getDocs(collection(db, "shop_products"));
+        if (!querySnapshot.empty) {
+          const cloudProducts = [];
+          querySnapshot.forEach((docSnap) => {
+            cloudProducts.push(docSnap.data());
+          });
+          // Trier par ID pour garder l'ordre
+          cloudProducts.sort((a, b) => a.id - b.id);
+          products = cloudProducts;
         } else {
-          await setDoc(docRef, { items: products });
+          // Si la collection est vide, on initialise la base avec les produits de base
+          for (const p of products) {
+            await setDoc(doc(db, "shop_products", `item_${p.id}`), p);
+          }
         }
       } catch (e) {
         console.log("Erreur cloud, chargement local:", e);
-        const local = localStorage.getItem('ums_products_data_v2');
+        const local = localStorage.getItem('ums_products_data_v3');
         if (local) products = JSON.parse(local);
       }
     }
 
+    // Enregistrement produit par produit (Sous-documents) pour éviter la limite d'1 Mo
     window.saveCreatorDataToCloud = async function() {
       try {
-        products.forEach(p => {
+        for (const p of products) {
           const nameInput = document.getElementById(`creator-name-${p.id}`);
           const priceInput = document.getElementById(`creator-price-${p.id}`);
           if (nameInput && priceInput) {
             p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
             p.price = parseFloat(priceInput.value) || 0;
           }
-        });
+          const prodRef = doc(db, "shop_products", `item_${p.id}`);
+          await setDoc(prodRef, p);
+        }
 
-        const docRef = doc(db, "shop", "catalog_v2");
-        await setDoc(docRef, { items: products });
-
-        localStorage.setItem('ums_products_data_v2', JSON.stringify(products));
+        localStorage.setItem('ums_products_data_v3', JSON.stringify(products));
         renderProducts();
         closeCreatorModal();
-        alert("Modifications enregistrées et publiées pour tous les téléphones !");
+        alert("Modifications enregistrées et publiées sans limite de taille !");
       } catch (e) {
         alert("Erreur cloud : " + e.message);
       }
     };
 
-    // Gestion de l'ajout groupé jusqu'à 100 photos en un clic
     window.handleMultipleGalleryUpload = async function(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
@@ -573,7 +577,7 @@
 
           if (loadedCount === maxFiles) {
             await saveCreatorDataToCloud();
-            alert(`${maxFiles} photos ajoutées avec succès ! Vous pouvez maintenant modifier leurs noms et prix.`);
+            alert(`${maxFiles} photos ajoutées et enregistrées avec succès !`);
             openCreatorModal();
           }
         };
@@ -872,13 +876,11 @@
       openCart();
     }
 
-    // Inclusion du lien / aperçu de l'image de l'article commandé sur WhatsApp
     window.quickOrderWhatsApp = function(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
       
-      // Si l'image est en base64 ou URL externe, on l'inclut dans le message WhatsApp
-      const imagePreview = prod.image.startsWith('data:') ? "[Image de l'article inclue dans l'app]" : prod.image;
+      const imagePreview = prod.image.startsWith('data:') ? "[Image de l'article inclue]" : prod.image;
       const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nLien/Aperçu photo: ${imagePreview}`;
       
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
@@ -891,7 +893,7 @@
       cart.forEach(item => {
         const subtotal = item.price * item.qty;
         total += subtotal;
-        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n  Photo: ${item.image.startsWith('data:') ? '[Article]' : item.image}\n`;
+        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n`;
       });
       message += `\n*Total Estimé:* ${total} $\nMerci de me confirmer la disponibilité !`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
