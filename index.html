@@ -129,9 +129,6 @@
       </a>
 
       <div class="flex items-center space-x-2.5">
-        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs shadow">
-          @
-        </button>
         <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
           <i class="fa-solid fa-magnifying-glass text-sm"></i>
         </button>
@@ -218,12 +215,7 @@
     </div>
 
     <!-- Grille de Produits -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="col-span-full py-20 text-center space-y-3">
-        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-400"></i>
-        <p class="text-xs text-neutral-400">Chargement de votre catalogue en cours...</p>
-      </div>
-    </div>
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </main>
 
   <!-- Pied de page -->
@@ -244,9 +236,6 @@
         <a href="https://wa.me/243818658932" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
           <i class="fa-brands fa-whatsapp"></i>
         </a>
-        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
-          @
-        </button>
       </div>
 
       <p class="text-[10px] text-neutral-600">&copy; 2026 URBAN MAN SHOP 2243. Tous droits réservés.</p>
@@ -392,57 +381,10 @@
     </div>
   </div>
 
-  <!-- Modal Espace Créateur (@) -->
-  <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
-      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
-        <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Marchandises
-        </h3>
-        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
-
-      <div class="p-4 bg-neutral-900/80 border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs text-neutral-300 font-semibold">Ajouter d'autres photos :</span>
-        <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleMultipleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
-      </div>
-
-      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
-
-      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Modifiez les prix et enregistrez</span>
-        <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
-          Enregistrer sur le Cloud
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Firebase SDKs & Script Principal -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const p1 = "AIzaSyBcoR5";
-    const p2 = "yMTMY_ittDm3T9Oak";
-    const p3 = "jMOP1CAV-0s";
-
-    const firebaseConfig = {
-      apiKey: p1 + p2 + p3,
-      authDomain: "urban-man-shop.firebaseapp.com",
-      projectId: "urban-man-shop",
-      storageBucket: "urban-man-shop.firebasestorage.app",
-      messagingSenderId: "301517686635",
-      appId: "1:301517686635:web:053f90fa4e472103c12e2e",
-      measurementId: "G-YS761W6CX2"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
+  <!-- Script Principal -->
+  <script>
     const PHONE_NUMBER = "243818658932";
+    const TOTAL_IMAGES = 100; // Vérifie de 1.png jusqu'à 100.png
     
     let products = [];
     let cart = [];
@@ -450,7 +392,7 @@
 
     window.addEventListener("DOMContentLoaded", async () => {
       requestNotificationPermission();
-      await loadProductsFromCloud();
+      await generateProductsList();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
@@ -470,92 +412,32 @@
       }
     }
 
-    // Chargement ultra-robuste avec tri fixe par ID pour éliminer les disparitions
-    async function loadProductsFromCloud() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
-        if (!querySnapshot.empty) {
-          const cloudProducts = [];
-          querySnapshot.forEach((docSnap) => {
-            cloudProducts.push(docSnap.data());
-          });
-          // Tri numérique strict pour que l'ordre ne change jamais
-          cloudProducts.sort((a, b) => Number(a.id) - Number(b.id));
-          products = cloudProducts;
-        }
-      } catch (e) {
-        console.log("Erreur cloud, chargement local:", e);
-        const local = localStorage.getItem('ums_clean_products');
-        if (local) {
-          products = JSON.parse(local);
-          products.sort((a, b) => Number(a.id) - Number(b.id));
-        }
+    // Génération automatique des produits de 1.png à 100.png avec filtrage intelligent
+    async function generateProductsList() {
+      products = [];
+      
+      const checkPromises = [];
+      for (let i = 1; i <= TOTAL_IMAGES; i++) {
+        const imagePath = `./${i}.png`;
+        checkPromises.push(
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src = imagePath;
+            img.onload = () => {
+              resolve({ id: i, name: `Marchandise #${i}`, price: 0, image: imagePath, likes: 0, dislikes: 0, userVoted: null, comments: [] });
+            };
+            img.onerror = () => {
+              resolve(null); // Si l'image n'existe pas, on l'ignore proprement
+            };
+          })
+        );
       }
+
+      const results = await Promise.all(checkPromises);
+      products = results.filter(item => item !== null);
+      // Tri par ordre numérique (1, 2, 3...)
+      products.sort((a, b) => a.id - b.id);
     }
-
-    window.saveCreatorDataToCloud = async function() {
-      try {
-        for (const p of products) {
-          const nameInput = document.getElementById(`creator-name-${p.id}`);
-          const priceInput = document.getElementById(`creator-price-${p.id}`);
-          if (nameInput && priceInput) {
-            p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
-            p.price = parseFloat(priceInput.value) || 0;
-          }
-          const prodRef = doc(db, "shop_products_clean", `item_${p.id}`);
-          await setDoc(prodRef, p);
-        }
-
-        // Sauvegarde locale de secours
-        localStorage.setItem('ums_clean_products', JSON.stringify(products));
-        renderProducts();
-        closeCreatorModal();
-        alert("Modifications enregistrées avec succès !");
-      } catch (e) {
-        alert("Erreur cloud : " + e.message);
-      }
-    };
-
-    window.handleMultipleGalleryUpload = async function(event) {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
-
-      const maxFiles = Math.min(files.length, 100);
-      let loadedCount = 0;
-
-      for (let i = 0; i < maxFiles; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        
-        reader.onload = async function(uploadEvent) {
-          const base64Image = uploadEvent.target.result;
-          const newId = products.length > 0 ? Math.max(...products.map(p => Number(p.id))) + 1 : 1;
-          
-          const newProd = {
-            id: newId,
-            name: `Marchandise #${newId}`,
-            price: 0,
-            image: base64Image,
-            likes: 0,
-            dislikes: 0,
-            userVoted: null,
-            comments: []
-          };
-
-          products.push(newProd);
-          loadedCount++;
-
-          if (loadedCount === maxFiles) {
-            products.sort((a, b) => Number(a.id) - Number(b.id));
-            await saveCreatorDataToCloud();
-            renderProducts();
-            alert(`${maxFiles} photos ajoutées avec succès !`);
-            openCreatorModal();
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    };
 
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
@@ -628,8 +510,8 @@
         grid.innerHTML = `
           <div class="col-span-full py-16 text-center space-y-3 glass-card rounded-2xl">
             <i class="fa-solid fa-box-open text-4xl text-neutral-600"></i>
-            <p class="text-xs text-neutral-400">Aucune marchandise pour le moment.</p>
-            <p class="text-xs text-amber-400 font-semibold">Cliquez sur le bouton '@' en haut pour ajouter vos articles depuis votre galerie !</p>
+            <p class="text-xs text-neutral-400">Aucune marchandise trouvée.</p>
+            <p class="text-xs text-amber-400 font-semibold">Ajoutez vos fichiers 1.png, 2.png... à la racine de votre dépôt GitHub !</p>
           </div>
         `;
         return;
@@ -642,7 +524,6 @@
         card.innerHTML = `
           <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
             <img src="${prod.image}" 
-                 onerror="this.src='https://via.placeholder.com/400x400/050505/FFFFFF?text=Article+${prod.id}'" 
                  alt="${prod.name}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             
@@ -750,52 +631,6 @@
       }
     }
 
-    window.promptCreatorAccess = function() {
-      const code = prompt("Mot de passe Espace Créateur :");
-      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
-        openCreatorModal();
-      } else if (code !== null) {
-        alert("Mot de passe incorrect.");
-      }
-    }
-
-    function openCreatorModal() {
-      const container = document.getElementById('creatorProductsList');
-      container.innerHTML = '';
-
-      if (products.length === 0) {
-        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise pour l\'instant.</p>';
-        document.getElementById('creatorModal').classList.remove('hidden');
-        return;
-      }
-
-      products.forEach(p => {
-        const row = document.createElement('div');
-        row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
-        row.innerHTML = `
-          <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="this.src='https://via.placeholder.com/40'">
-            <span class="text-xs font-mono text-neutral-400">#${p.id}</span>
-          </div>
-
-          <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
-            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
-            <div class="flex items-center space-x-1 w-full sm:w-32">
-              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
-              <span class="text-xs font-bold text-amber-400">$</span>
-            </div>
-          </div>
-        `;
-        container.appendChild(row);
-      });
-
-      document.getElementById('creatorModal').classList.remove('hidden');
-    }
-
-    window.closeCreatorModal = function() {
-      document.getElementById('creatorModal').classList.add('hidden');
-    }
-
     window.addToCart = function(productId) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
@@ -872,9 +707,7 @@
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
       
-      const imagePreview = prod.image.startsWith('data:') ? "[Image de l'article inclue]" : prod.image;
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nAperçu photo: ${imagePreview}`;
-      
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nLien photo: ${prod.image}`;
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
 
