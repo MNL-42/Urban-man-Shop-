@@ -439,9 +439,7 @@
 
     const PHONE_NUMBER = "243818658932";
     
-    // Catalogue initial vide pour recommencer à zéro proprement
     let products = [];
-
     let cart = [];
     let deferredPrompt = null;
 
@@ -464,28 +462,6 @@
     function requestNotificationPermission() {
       if ("Notification" in window && Notification.permission !== "granted") {
         Notification.requestPermission();
-      }
-    }
-
-    function sendNewProductNotification(productName) {
-      if ("Notification" in window && Notification.permission === "granted") {
-        try {
-          navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification("URBAN MAN SHOP 2243", {
-              body: `✨ Nouveau produit publié : ${productName} !`,
-              icon: "./logo.png",
-              badge: "./logo.png",
-              vibrate: [200, 100, 200]
-            });
-          }).catch(() => {
-            new Notification("URBAN MAN SHOP 2243", {
-              body: `✨ Nouveau produit publié : ${productName} !`,
-              icon: "./logo.png"
-            });
-          });
-        } catch (e) {
-          console.log("Notification error:", e);
-        }
       }
     }
 
@@ -521,7 +497,7 @@
         }
 
         localStorage.setItem('ums_clean_products', JSON.stringify(products));
-        renderProducts();
+        renderProducts(); // <-- Rafraîchissement instantané de la grille
         closeCreatorModal();
         alert("Modifications enregistrées et publiées avec succès !");
       } catch (e) {
@@ -560,7 +536,8 @@
 
           if (loadedCount === maxFiles) {
             await saveCreatorDataToCloud();
-            alert(`${maxFiles} photos ajoutées et enregistrées avec succès !`);
+            renderProducts(); // <-- Affichage direct des nouvelles photos
+            alert(`${maxFiles} photos ajoutées et affichées avec succès !`);
             openCreatorModal();
           }
         };
