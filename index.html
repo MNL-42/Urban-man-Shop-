@@ -206,7 +206,7 @@
       <div>
         <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center">
           <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
-          Marchandises Disponibles
+          Marchandises Disponibles (<span id="productCount">0</span>)
         </h3>
         <p class="text-xs text-neutral-400 mt-0.5">Cliquez sur une photo pour l'agrandir et zoomer</p>
       </div>
@@ -218,7 +218,12 @@
     </div>
 
     <!-- Grille de Produits -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="col-span-full py-20 text-center space-y-3">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-400"></i>
+        <p class="text-xs text-neutral-400">Chargement de votre catalogue en cours...</p>
+      </div>
+    </div>
   </main>
 
   <!-- Pied de page -->
@@ -392,7 +397,7 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Ajout Groupé (Sans Limite)
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Marchandises
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -400,7 +405,7 @@
       </div>
 
       <div class="p-4 bg-neutral-900/80 border-b border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs text-neutral-300 font-semibold">Sélectionner plusieurs photos :</span>
+        <span class="text-xs text-neutral-300 font-semibold">Ajouter d'autres photos :</span>
         <input type="file" id="galleryFileInput" accept="image/*" multiple onchange="handleMultipleGalleryUpload(event)" class="text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-400 file:text-black hover:file:bg-amber-300 cursor-pointer">
       </div>
 
@@ -465,6 +470,7 @@
       }
     }
 
+    // Chargement ultra-robuste avec tri fixe par ID pour éliminer les disparitions
     async function loadProductsFromCloud() {
       try {
         const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
@@ -473,13 +479,17 @@
           querySnapshot.forEach((docSnap) => {
             cloudProducts.push(docSnap.data());
           });
-          cloudProducts.sort((a, b) => a.id - b.id);
+          // Tri numérique strict pour que l'ordre ne change jamais
+          cloudProducts.sort((a, b) => Number(a.id) - Number(b.id));
           products = cloudProducts;
         }
       } catch (e) {
         console.log("Erreur cloud, chargement local:", e);
         const local = localStorage.getItem('ums_clean_products');
-        if (local) products = JSON.parse(local);
+        if (local) {
+          products = JSON.parse(local);
+          products.sort((a, b) => Number(a.id) - Number(b.id));
+        }
       }
     }
 
@@ -496,10 +506,11 @@
           await setDoc(prodRef, p);
         }
 
+        // Sauvegarde locale de secours
         localStorage.setItem('ums_clean_products', JSON.stringify(products));
-        renderProducts(); // <-- Rafraîchissement instantané de la grille
+        renderProducts();
         closeCreatorModal();
-        alert("Modifications enregistrées et publiées avec succès !");
+        alert("Modifications enregistrées avec succès !");
       } catch (e) {
         alert("Erreur cloud : " + e.message);
       }
@@ -518,7 +529,7 @@
         
         reader.onload = async function(uploadEvent) {
           const base64Image = uploadEvent.target.result;
-          const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+          const newId = products.length > 0 ? Math.max(...products.map(p => Number(p.id))) + 1 : 1;
           
           const newProd = {
             id: newId,
@@ -535,9 +546,10 @@
           loadedCount++;
 
           if (loadedCount === maxFiles) {
+            products.sort((a, b) => Number(a.id) - Number(b.id));
             await saveCreatorDataToCloud();
-            renderProducts(); // <-- Affichage direct des nouvelles photos
-            alert(`${maxFiles} photos ajoutées et affichées avec succès !`);
+            renderProducts();
+            alert(`${maxFiles} photos ajoutées avec succès !`);
             openCreatorModal();
           }
         };
@@ -607,7 +619,10 @@
 
     function renderProducts(itemsToRender = products) {
       const grid = document.getElementById('productsGrid');
+      const countSpan = document.getElementById('productCount');
+      
       grid.innerHTML = '';
+      countSpan.textContent = itemsToRender.length;
 
       if (itemsToRender.length === 0) {
         grid.innerHTML = `
@@ -749,7 +764,7 @@
       container.innerHTML = '';
 
       if (products.length === 0) {
-        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise pour l\'instant. Utilisez le bouton ci-dessus pour en ajouter.</p>';
+        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise pour l\'instant.</p>';
         document.getElementById('creatorModal').classList.remove('hidden');
         return;
       }
