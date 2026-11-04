@@ -387,7 +387,7 @@
     </div>
   </div>
 
-  <!-- Modal Espace Créateur (@) avec Sauvegarde Indépendante -->
+  <!-- Modal Espace Créateur (@) -->
   <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
@@ -438,18 +438,9 @@
     const db = getFirestore(app);
 
     const PHONE_NUMBER = "243818658932";
-    const INITIAL_PRODUCTS = 23;
-
-    let products = Array.from({ length: INITIAL_PRODUCTS }, (_, i) => ({
-      id: i + 1,
-      name: `Marchandise #${i + 1}`,
-      price: 0,
-      image: `./${i + 1}.png`,
-      likes: 0,
-      dislikes: 0,
-      userVoted: null,
-      comments: []
-    }));
+    
+    // Catalogue initial vide pour recommencer à zéro proprement
+    let products = [];
 
     let cart = [];
     let deferredPrompt = null;
@@ -498,32 +489,24 @@
       }
     }
 
-    // Chargement de chaque produit de manière indépendante depuis Firestore
     async function loadProductsFromCloud() {
       try {
-        const querySnapshot = await getDocs(collection(db, "shop_products"));
+        const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
         if (!querySnapshot.empty) {
           const cloudProducts = [];
           querySnapshot.forEach((docSnap) => {
             cloudProducts.push(docSnap.data());
           });
-          // Trier par ID pour garder l'ordre
           cloudProducts.sort((a, b) => a.id - b.id);
           products = cloudProducts;
-        } else {
-          // Si la collection est vide, on initialise la base avec les produits de base
-          for (const p of products) {
-            await setDoc(doc(db, "shop_products", `item_${p.id}`), p);
-          }
         }
       } catch (e) {
         console.log("Erreur cloud, chargement local:", e);
-        const local = localStorage.getItem('ums_products_data_v3');
+        const local = localStorage.getItem('ums_clean_products');
         if (local) products = JSON.parse(local);
       }
     }
 
-    // Enregistrement produit par produit (Sous-documents) pour éviter la limite d'1 Mo
     window.saveCreatorDataToCloud = async function() {
       try {
         for (const p of products) {
@@ -533,14 +516,14 @@
             p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
             p.price = parseFloat(priceInput.value) || 0;
           }
-          const prodRef = doc(db, "shop_products", `item_${p.id}`);
+          const prodRef = doc(db, "shop_products_clean", `item_${p.id}`);
           await setDoc(prodRef, p);
         }
 
-        localStorage.setItem('ums_products_data_v3', JSON.stringify(products));
+        localStorage.setItem('ums_clean_products', JSON.stringify(products));
         renderProducts();
         closeCreatorModal();
-        alert("Modifications enregistrées et publiées sans limite de taille !");
+        alert("Modifications enregistrées et publiées avec succès !");
       } catch (e) {
         alert("Erreur cloud : " + e.message);
       }
@@ -648,6 +631,17 @@
     function renderProducts(itemsToRender = products) {
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
+
+      if (itemsToRender.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 glass-card rounded-2xl">
+            <i class="fa-solid fa-box-open text-4xl text-neutral-600"></i>
+            <p class="text-xs text-neutral-400">Aucune marchandise pour le moment.</p>
+            <p class="text-xs text-amber-400 font-semibold">Cliquez sur le bouton '@' en haut pour ajouter vos articles depuis votre galerie !</p>
+          </div>
+        `;
+        return;
+      }
 
       itemsToRender.forEach(prod => {
         const card = document.createElement('div');
@@ -777,6 +771,12 @@
       const container = document.getElementById('creatorProductsList');
       container.innerHTML = '';
 
+      if (products.length === 0) {
+        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise pour l\'instant. Utilisez le bouton ci-dessus pour en ajouter.</p>';
+        document.getElementById('creatorModal').classList.remove('hidden');
+        return;
+      }
+
       products.forEach(p => {
         const row = document.createElement('div');
         row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
@@ -881,7 +881,7 @@
       if (!prod) return;
       
       const imagePreview = prod.image.startsWith('data:') ? "[Image de l'article inclue]" : prod.image;
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nLien/Aperçu photo: ${imagePreview}`;
+      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nAperçu photo: ${imagePreview}`;
       
       window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
     }
