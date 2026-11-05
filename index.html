@@ -92,7 +92,6 @@
       animation: pulseGlow 3s infinite;
     }
 
-    /* Bouton flottant Tombola lumineux */
     @keyframes floatButton {
       0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
       50% { transform: translateY(-6px) scale(1.05); box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
@@ -205,7 +204,7 @@
     </div>
   </section>
 
-  <!-- Bouton Flottant Tombola (Bas de l'écran) -->
+  <!-- Bouton Flottant Tombola -->
   <div class="fixed bottom-6 right-6 z-40 flex flex-col items-center">
     <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded-full border border-amber-500/30 mb-1 shadow">Tombola</span>
     <button onclick="openTombolaModal()" class="floating-tombola w-14 h-14 bg-gradient-to-tr from-amber-600 to-yellow-400 text-black rounded-full flex items-center justify-center shadow-2xl border-2 border-white/20 hover:scale-110 transition">
@@ -230,13 +229,8 @@
       </div>
     </div>
 
-    <!-- Grille de Produits -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="col-span-full py-16 text-center space-y-3">
-        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-400"></i>
-        <p class="text-xs text-neutral-400">Chargement des marchandises...</p>
-      </div>
-    </div>
+    <!-- Grille de Produits (Affichage direct et naturel) -->
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </main>
 
   <!-- Pied de page -->
@@ -410,19 +404,17 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Synchronisation Cloud
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Synchronisation des Prix
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
-      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList">
-        <p class="text-xs text-neutral-400 text-center py-4">Chargement des articles depuis le Cloud...</p>
-      </div>
+      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Enregistre pour propager sur tous les téléphones</span>
+        <span class="text-xs text-neutral-400">Modifie les prix et enregistre sur le Cloud</span>
         <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
           Enregistrer sur le Cloud
         </button>
@@ -461,7 +453,7 @@
 
     window.addEventListener("DOMContentLoaded", async () => {
       requestNotificationPermission();
-      await loadProductsFromCloud();
+      await initProducts();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
@@ -473,50 +465,52 @@
       }
     }
 
-    // Chargement intelligent combinant les fichiers physiques (1.png...) et le Cloud Firestore
-    async function loadProductsFromCloud() {
+    // Chargement instantané depuis GitHub et fusion des prix depuis Firebase Cloud
+    async function initProducts() {
+      products = [];
+      let cloudPrices = {};
+
       try {
-        let cloudMap = {};
         const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          cloudMap[data.id] = data;
+          cloudPrices[data.id] = data;
         });
-
-        products = [];
-        const checkPromises = [];
-        for (let i = 1; i <= TOTAL_IMAGES; i++) {
-          const imagePath = `./${i}.png`;
-          checkPromises.push(
-            new Promise((resolve) => {
-              const img = new Image();
-              img.src = imagePath;
-              img.onload = () => {
-                const existing = cloudMap[i] || {};
-                resolve({ 
-                  id: i, 
-                  name: existing.name || `Marchandise #${i}`, 
-                  price: existing.price !== undefined ? existing.price : 0, 
-                  image: imagePath, 
-                  likes: existing.likes || 0, 
-                  dislikes: existing.dislikes || 0, 
-                  userVoted: existing.userVoted || null, 
-                  comments: existing.comments || [] 
-                });
-              };
-              img.onerror = () => {
-                resolve(null);
-              };
-            })
-          );
-        }
-
-        const results = await Promise.all(checkPromises);
-        products = results.filter(item => item !== null);
-        products.sort((a, b) => a.id - b.id);
       } catch (e) {
-        console.log("Erreur Cloud, mode local de secours:", e);
+        console.log("Mode hors-ligne ou erreur cloud:", e);
       }
+
+      // Vérification rapide en arrière-plan des fichiers de 1 à 100 sur GitHub
+      const checkPromises = [];
+      for (let i = 1; i <= TOTAL_IMAGES; i++) {
+        const imagePath = `./${i}.png`;
+        checkPromises.push(
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src = imagePath;
+            img.onload = () => {
+              const cloudItem = cloudPrices[i] || {};
+              resolve({ 
+                id: i, 
+                name: cloudItem.name || `Marchandise #${i}`, 
+                price: cloudItem.price !== undefined ? cloudItem.price : 0, 
+                image: imagePath, 
+                likes: cloudItem.likes || 0, 
+                dislikes: cloudItem.dislikes || 0, 
+                userVoted: cloudItem.userVoted || null, 
+                comments: cloudItem.comments || [] 
+              });
+            };
+            img.onerror = () => {
+              resolve(null); // Ignore si l'image n'existe pas sur GitHub
+            };
+          })
+        );
+      }
+
+      const results = await Promise.all(checkPromises);
+      products = results.filter(item => item !== null);
+      products.sort((a, b) => a.id - b.id);
     }
 
     window.promptCreatorAccess = function() {
@@ -565,10 +559,9 @@
       document.getElementById('creatorModal').classList.add('hidden');
     }
 
-    // Enregistrement global sur le Cloud Firestore
+    // Enregistrement des prix et noms dans Firebase Cloud pour tous les téléphones
     window.saveCreatorDataToCloud = async function() {
       try {
-        alert("Enregistrement en cours sur le Cloud... Veuillez patienter quelques secondes.");
         for (const p of products) {
           const nameInput = document.getElementById(`creator-name-${p.id}`);
           const priceInput = document.getElementById(`creator-price-${p.id}`);
@@ -591,7 +584,7 @@
 
         renderProducts();
         closeCreatorModal();
-        alert("Modifications enregistrées sur le Cloud avec succès ! Elles apparaissent désormais sur tous les téléphones.");
+        alert("Modifications enregistrées sur le Cloud avec succès ! Elles sont désormais visibles sur tous les téléphones.");
       } catch (e) {
         alert("Erreur lors de l'enregistrement Cloud : " + e.message);
       }
@@ -662,12 +655,6 @@
       grid.innerHTML = '';
 
       if (itemsToRender.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full py-16 text-center space-y-3 glass-card rounded-2xl">
-            <i class="fa-solid fa-box-open text-4xl text-neutral-600"></i>
-            <p class="text-xs text-neutral-400">Aucune marchandise trouvée.</p>
-          </div>
-        `;
         return;
       }
 
@@ -773,7 +760,7 @@
         const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
         await setDoc(prodRef, prod, { merge: true });
       } catch (e) {
-        console.log("Erreur synchro vote:", e);
+        console.log("Erreur vote:", e);
       }
       renderProducts();
     }
@@ -792,7 +779,7 @@
           const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
           await setDoc(prodRef, prod, { merge: true });
         } catch (e) {
-          console.log("Erreur synchro commentaire:", e);
+          console.log("Erreur commentaire:", e);
         }
         renderProducts();
       }
