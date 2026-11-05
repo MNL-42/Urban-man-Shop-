@@ -92,6 +92,15 @@
       animation: pulseGlow 3s infinite;
     }
 
+    /* Bouton flottant Tombola lumineux */
+    @keyframes floatButton {
+      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+      50% { transform: translateY(-6px) scale(1.05); box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
+    }
+    .floating-tombola {
+      animation: floatButton 2.5s infinite ease-in-out;
+    }
+
     #zoomedImage {
       transition: transform 0.3s ease;
       cursor: zoom-in;
@@ -187,23 +196,27 @@
               <span>Explorer la Collection</span>
               <i class="fa-solid fa-arrow-down text-xs"></i>
             </a>
-            <button onclick="openTombolaModal()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/40 font-bold px-5 py-3 rounded-xl transition text-xs sm:text-sm flex items-center space-x-2 animate-pulse">
-              <i class="fa-solid fa-gift"></i>
-              <span>Participer à la Tombola !</span>
-            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Bouton Flottant Tombola (Bas de l'écran) -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-center">
+    <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded-full border border-amber-500/30 mb-1 shadow">Tombola</span>
+    <button onclick="openTombolaModal()" class="floating-tombola w-14 h-14 bg-gradient-to-tr from-amber-600 to-yellow-400 text-black rounded-full flex items-center justify-center shadow-2xl border-2 border-white/20 hover:scale-110 transition">
+      <i class="fa-solid fa-gift text-xl"></i>
+    </button>
+  </div>
+
   <!-- Contenu Principal -->
   <main id="catalogues" class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-800/80 pb-4">
       <div>
-        <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center">
+        <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center text-gradient-gold">
           <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
-          Marchandises Disponibles (<span id="productCount">0</span>)
+          Collection Exclusive (<span id="productCount">0</span>)
         </h3>
         <p class="text-xs text-neutral-400 mt-0.5">Cliquez sur une photo pour l'agrandir et zoomer</p>
       </div>
@@ -242,7 +255,7 @@
     </div>
   </footer>
 
-  <!-- Modal Tombola Animée -->
+  <!-- Modal Tombola -->
   <div id="tombolaModal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
     <div class="glass-modal rounded-3xl w-full max-w-md overflow-hidden border border-amber-500/40 shadow-2xl animate-fade-in relative">
       <div class="absolute -right-12 -top-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -384,7 +397,7 @@
   <!-- Script Principal -->
   <script>
     const PHONE_NUMBER = "243818658932";
-    const TOTAL_IMAGES = 100; // Vérifie de 1.png jusqu'à 100.png
+    const TOTAL_IMAGES = 100;
     
     let products = [];
     let cart = [];
@@ -396,14 +409,6 @@
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
-
-      setInterval(() => {
-        openTombolaModal();
-      }, 3600000);
-
-      setTimeout(() => {
-        openTombolaModal();
-      }, 5000);
     });
 
     function requestNotificationPermission() {
@@ -412,10 +417,8 @@
       }
     }
 
-    // Génération automatique des produits de 1.png à 100.png avec filtrage intelligent
     async function generateProductsList() {
       products = [];
-      
       const checkPromises = [];
       for (let i = 1; i <= TOTAL_IMAGES; i++) {
         const imagePath = `./${i}.png`;
@@ -427,7 +430,7 @@
               resolve({ id: i, name: `Marchandise #${i}`, price: 0, image: imagePath, likes: 0, dislikes: 0, userVoted: null, comments: [] });
             };
             img.onerror = () => {
-              resolve(null); // Si l'image n'existe pas, on l'ignore proprement
+              resolve(null);
             };
           })
         );
@@ -435,7 +438,6 @@
 
       const results = await Promise.all(checkPromises);
       products = results.filter(item => item !== null);
-      // Tri par ordre numérique (1, 2, 3...)
       products.sort((a, b) => a.id - b.id);
     }
 
@@ -511,7 +513,6 @@
           <div class="col-span-full py-16 text-center space-y-3 glass-card rounded-2xl">
             <i class="fa-solid fa-box-open text-4xl text-neutral-600"></i>
             <p class="text-xs text-neutral-400">Aucune marchandise trouvée.</p>
-            <p class="text-xs text-amber-400 font-semibold">Ajoutez vos fichiers 1.png, 2.png... à la racine de votre dépôt GitHub !</p>
           </div>
         `;
         return;
