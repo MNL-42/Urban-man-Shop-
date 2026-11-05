@@ -229,7 +229,7 @@
       </div>
     </div>
 
-    <!-- Grille de Produits instantanée (1 à 93) -->
+    <!-- Grille de Produits instantanée -->
     <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </main>
 
@@ -445,7 +445,7 @@
     const db = getFirestore(app);
 
     const PHONE_NUMBER = "243818658932";
-    const TOTAL_IMAGES = 93; // Exactement tes 93 marchandises sur GitHub
+    const TOTAL_IMAGES = 93;
     
     let products = [];
     let cart = [];
@@ -465,7 +465,7 @@
       }
     }
 
-    // Chargement instantané sans attente : les images 1 à 93 s'affichent tout de suite
+    // Chargement instantané sans blocage
     async function loadShopData() {
       let cloudPrices = {};
 
@@ -535,7 +535,6 @@
       document.getElementById('creatorModal').classList.add('hidden');
     }
 
-    // Sauvegarde instantanée des prix et noms dans Firebase pour tous les téléphones
     window.saveCreatorDataToCloud = async function() {
       try {
         for (const p of products) {
@@ -639,7 +638,7 @@
         card.innerHTML = `
           <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
             <img src="${prod.image}" 
-                 onerror="this.style.display='none'"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300/111/444?text=Article+${prod.id}';"
                  alt="${prod.name}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             
