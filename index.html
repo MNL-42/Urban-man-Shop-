@@ -229,7 +229,7 @@
       </div>
     </div>
 
-    <!-- Grille de Produits (Affichage direct et naturel) -->
+    <!-- Grille de Produits instantanée (1 à 93) -->
     <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </main>
 
@@ -445,7 +445,7 @@
     const db = getFirestore(app);
 
     const PHONE_NUMBER = "243818658932";
-    const TOTAL_IMAGES = 100;
+    const TOTAL_IMAGES = 93; // Exactement tes 93 marchandises sur GitHub
     
     let products = [];
     let cart = [];
@@ -453,7 +453,7 @@
 
     window.addEventListener("DOMContentLoaded", async () => {
       requestNotificationPermission();
-      await initProducts();
+      await loadShopData();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
@@ -465,9 +465,8 @@
       }
     }
 
-    // Chargement instantané depuis GitHub et fusion des prix depuis Firebase Cloud
-    async function initProducts() {
-      products = [];
+    // Chargement instantané sans attente : les images 1 à 93 s'affichent tout de suite
+    async function loadShopData() {
       let cloudPrices = {};
 
       try {
@@ -477,40 +476,23 @@
           cloudPrices[data.id] = data;
         });
       } catch (e) {
-        console.log("Mode hors-ligne ou erreur cloud:", e);
+        console.log("Mode hors-ligne:", e);
       }
 
-      // Vérification rapide en arrière-plan des fichiers de 1 à 100 sur GitHub
-      const checkPromises = [];
+      products = [];
       for (let i = 1; i <= TOTAL_IMAGES; i++) {
-        const imagePath = `./${i}.png`;
-        checkPromises.push(
-          new Promise((resolve) => {
-            const img = new Image();
-            img.src = imagePath;
-            img.onload = () => {
-              const cloudItem = cloudPrices[i] || {};
-              resolve({ 
-                id: i, 
-                name: cloudItem.name || `Marchandise #${i}`, 
-                price: cloudItem.price !== undefined ? cloudItem.price : 0, 
-                image: imagePath, 
-                likes: cloudItem.likes || 0, 
-                dislikes: cloudItem.dislikes || 0, 
-                userVoted: cloudItem.userVoted || null, 
-                comments: cloudItem.comments || [] 
-              });
-            };
-            img.onerror = () => {
-              resolve(null); // Ignore si l'image n'existe pas sur GitHub
-            };
-          })
-        );
+        const cloudItem = cloudPrices[i] || {};
+        products.push({
+          id: i,
+          name: cloudItem.name || `Marchandise #${i}`,
+          price: cloudItem.price !== undefined ? cloudItem.price : 0,
+          image: `./${i}.png`,
+          likes: cloudItem.likes || 0,
+          dislikes: cloudItem.dislikes || 0,
+          userVoted: cloudItem.userVoted || null,
+          comments: cloudItem.comments || []
+        });
       }
-
-      const results = await Promise.all(checkPromises);
-      products = results.filter(item => item !== null);
-      products.sort((a, b) => a.id - b.id);
     }
 
     window.promptCreatorAccess = function() {
@@ -525,12 +507,6 @@
     function openCreatorModal() {
       const container = document.getElementById('creatorProductsList');
       container.innerHTML = '';
-
-      if (products.length === 0) {
-        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise trouvée.</p>';
-        document.getElementById('creatorModal').classList.remove('hidden');
-        return;
-      }
 
       products.forEach(p => {
         const row = document.createElement('div');
@@ -559,7 +535,7 @@
       document.getElementById('creatorModal').classList.add('hidden');
     }
 
-    // Enregistrement des prix et noms dans Firebase Cloud pour tous les téléphones
+    // Sauvegarde instantanée des prix et noms dans Firebase pour tous les téléphones
     window.saveCreatorDataToCloud = async function() {
       try {
         for (const p of products) {
@@ -584,9 +560,9 @@
 
         renderProducts();
         closeCreatorModal();
-        alert("Modifications enregistrées sur le Cloud avec succès ! Elles sont désormais visibles sur tous les téléphones.");
+        alert("Enregistré ! Les modifications sont désormais visibles sur tous les téléphones.");
       } catch (e) {
-        alert("Erreur lors de l'enregistrement Cloud : " + e.message);
+        alert("Erreur Cloud : " + e.message);
       }
     };
 
@@ -654,9 +630,7 @@
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
 
-      if (itemsToRender.length === 0) {
-        return;
-      }
+      if (itemsToRender.length === 0) return;
 
       itemsToRender.forEach(prod => {
         const card = document.createElement('div');
@@ -665,6 +639,7 @@
         card.innerHTML = `
           <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
             <img src="${prod.image}" 
+                 onerror="this.style.display='none'"
                  alt="${prod.name}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             
