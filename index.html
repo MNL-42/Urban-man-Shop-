@@ -138,6 +138,9 @@
       </a>
 
       <div class="flex items-center space-x-2.5">
+        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs shadow">
+          @
+        </button>
         <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
           <i class="fa-solid fa-magnifying-glass text-sm"></i>
         </button>
@@ -216,7 +219,7 @@
       <div>
         <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center text-gradient-gold">
           <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
-          Collection Exclusive (<span id="productCount">0</span>)
+          Collection Exclusive
         </h3>
         <p class="text-xs text-neutral-400 mt-0.5">Cliquez sur une photo pour l'agrandir et zoomer</p>
       </div>
@@ -249,6 +252,9 @@
         <a href="https://wa.me/243818658932" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
           <i class="fa-brands fa-whatsapp"></i>
         </a>
+        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
+          @
+        </button>
       </div>
 
       <p class="text-[10px] text-neutral-600">&copy; 2026 URBAN MAN SHOP 2243. Tous droits réservés.</p>
@@ -394,6 +400,29 @@
     </div>
   </div>
 
+  <!-- Modal Espace Créateur (@) -->
+  <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
+      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
+        <h3 class="font-bold text-base flex items-center text-white">
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Prix et Noms
+        </h3>
+        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
+
+      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
+        <span class="text-xs text-neutral-400">Modifiez les noms et prix et enregistrez</span>
+        <button onclick="saveCreatorData()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+          Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Script Principal -->
   <script>
     const PHONE_NUMBER = "243818658932";
@@ -419,6 +448,9 @@
 
     async function generateProductsList() {
       products = [];
+      // Charger les données sauvegardées localement (noms personnalisés et prix)
+      const savedData = JSON.parse(localStorage.getItem('ums_custom_products') || '{}');
+
       const checkPromises = [];
       for (let i = 1; i <= TOTAL_IMAGES; i++) {
         const imagePath = `./${i}.png`;
@@ -427,7 +459,17 @@
             const img = new Image();
             img.src = imagePath;
             img.onload = () => {
-              resolve({ id: i, name: `Marchandise #${i}`, price: 0, image: imagePath, likes: 0, dislikes: 0, userVoted: null, comments: [] });
+              const custom = savedData[i] || {};
+              resolve({ 
+                id: i, 
+                name: custom.name || `Marchandise #${i}`, 
+                price: custom.price !== undefined ? custom.price : 0, 
+                image: imagePath, 
+                likes: custom.likes || 0, 
+                dislikes: custom.dislikes || 0, 
+                userVoted: custom.userVoted || null, 
+                comments: custom.comments || [] 
+              });
             };
             img.onerror = () => {
               resolve(null);
@@ -439,6 +481,77 @@
       const results = await Promise.all(checkPromises);
       products = results.filter(item => item !== null);
       products.sort((a, b) => a.id - b.id);
+    }
+
+    window.promptCreatorAccess = function() {
+      const code = prompt("Mot de passe Espace Créateur :");
+      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
+        openCreatorModal();
+      } else if (code !== null) {
+        alert("Mot de passe incorrect.");
+      }
+    }
+
+    function openCreatorModal() {
+      const container = document.getElementById('creatorProductsList');
+      container.innerHTML = '';
+
+      if (products.length === 0) {
+        container.innerHTML = '<p class="text-xs text-neutral-500 text-center py-6">Aucune marchandise trouvée.</p>';
+        document.getElementById('creatorModal').classList.remove('hidden');
+        return;
+      }
+
+      products.forEach(p => {
+        const row = document.createElement('div');
+        row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
+        row.innerHTML = `
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="this.src='https://via.placeholder.com/40'">
+            <span class="text-xs font-mono text-neutral-400">#${p.id}</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
+            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+            <div class="flex items-center space-x-1 w-full sm:w-32">
+              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+              <span class="text-xs font-bold text-amber-400">$</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById('creatorModal').classList.remove('hidden');
+    }
+
+    window.closeCreatorModal = function() {
+      document.getElementById('creatorModal').classList.add('hidden');
+    }
+
+    window.saveCreatorData = function() {
+      const savedData = {};
+      products.forEach(p => {
+        const nameInput = document.getElementById(`creator-name-${p.id}`);
+        const priceInput = document.getElementById(`creator-price-${p.id}`);
+        if (nameInput && priceInput) {
+          p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
+          p.price = parseFloat(priceInput.value) || 0;
+        }
+        savedData[p.id] = {
+          name: p.name,
+          price: p.price,
+          likes: p.likes,
+          dislikes: p.dislikes,
+          userVoted: p.userVoted,
+          comments: p.comments
+        };
+      });
+
+      localStorage.setItem('ums_custom_products', JSON.stringify(savedData));
+      renderProducts();
+      closeCreatorModal();
+      alert("Modifications enregistrées avec succès !");
     }
 
     function registerServiceWorker() {
@@ -503,10 +616,7 @@
 
     function renderProducts(itemsToRender = products) {
       const grid = document.getElementById('productsGrid');
-      const countSpan = document.getElementById('productCount');
-      
       grid.innerHTML = '';
-      countSpan.textContent = itemsToRender.length;
 
       if (itemsToRender.length === 0) {
         grid.innerHTML = `
@@ -615,6 +725,9 @@
         if (type === 'dislike') prod.dislikes++;
         prod.userVoted = type;
       }
+      
+      // Sauvegarde des votes
+      saveLocalData();
       renderProducts();
     }
 
@@ -628,8 +741,24 @@
       const prod = products.find(p => p.id === productId);
       if (prod) {
         prod.comments.push({ user, text });
+        saveLocalData();
         renderProducts();
       }
+    }
+
+    function saveLocalData() {
+      const savedData = JSON.parse(localStorage.getItem('ums_custom_products') || '{}');
+      products.forEach(p => {
+        savedData[p.id] = {
+          name: p.name,
+          price: p.price,
+          likes: p.likes,
+          dislikes: p.dislikes,
+          userVoted: p.userVoted,
+          comments: p.comments
+        };
+      });
+      localStorage.setItem('ums_custom_products', JSON.stringify(savedData));
     }
 
     window.addToCart = function(productId) {
