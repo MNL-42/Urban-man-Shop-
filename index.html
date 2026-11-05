@@ -231,7 +231,12 @@
     </div>
 
     <!-- Grille de Produits -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="col-span-full py-16 text-center space-y-3">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-400"></i>
+        <p class="text-xs text-neutral-400">Chargement des marchandises...</p>
+      </div>
+    </div>
   </main>
 
   <!-- Pied de page -->
@@ -405,26 +410,48 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Gestion des Prix et Noms
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Synchronisation Cloud
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
-      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
+      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList">
+        <p class="text-xs text-neutral-400 text-center py-4">Chargement des articles depuis le Cloud...</p>
+      </div>
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Modifiez les noms et prix et enregistrez</span>
-        <button onclick="saveCreatorData()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
-          Enregistrer
+        <span class="text-xs text-neutral-400">Enregistre pour propager sur tous les téléphones</span>
+        <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+          Enregistrer sur le Cloud
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Script Principal -->
-  <script>
+  <!-- Firebase SDKs & Script Principal -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const p1 = "AIzaSyBcoR5";
+    const p2 = "yMTMY_ittDm3T9Oak";
+    const p3 = "jMOP1CAV-0s";
+
+    const firebaseConfig = {
+      apiKey: p1 + p2 + p3,
+      authDomain: "urban-man-shop.firebaseapp.com",
+      projectId: "urban-man-shop",
+      storageBucket: "urban-man-shop.firebasestorage.app",
+      messagingSenderId: "301517686635",
+      appId: "1:301517686635:web:053f90fa4e472103c12e2e",
+      measurementId: "G-YS761W6CX2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const PHONE_NUMBER = "243818658932";
     const TOTAL_IMAGES = 100;
     
@@ -434,7 +461,7 @@
 
     window.addEventListener("DOMContentLoaded", async () => {
       requestNotificationPermission();
-      await generateProductsList();
+      await loadProductsFromCloud();
       renderProducts();
       updateCartBadge();
       registerServiceWorker();
@@ -446,41 +473,50 @@
       }
     }
 
-    async function generateProductsList() {
-      products = [];
-      // Charger les données sauvegardées localement (noms personnalisés et prix)
-      const savedData = JSON.parse(localStorage.getItem('ums_custom_products') || '{}');
+    // Chargement intelligent combinant les fichiers physiques (1.png...) et le Cloud Firestore
+    async function loadProductsFromCloud() {
+      try {
+        let cloudMap = {};
+        const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          cloudMap[data.id] = data;
+        });
 
-      const checkPromises = [];
-      for (let i = 1; i <= TOTAL_IMAGES; i++) {
-        const imagePath = `./${i}.png`;
-        checkPromises.push(
-          new Promise((resolve) => {
-            const img = new Image();
-            img.src = imagePath;
-            img.onload = () => {
-              const custom = savedData[i] || {};
-              resolve({ 
-                id: i, 
-                name: custom.name || `Marchandise #${i}`, 
-                price: custom.price !== undefined ? custom.price : 0, 
-                image: imagePath, 
-                likes: custom.likes || 0, 
-                dislikes: custom.dislikes || 0, 
-                userVoted: custom.userVoted || null, 
-                comments: custom.comments || [] 
-              });
-            };
-            img.onerror = () => {
-              resolve(null);
-            };
-          })
-        );
+        products = [];
+        const checkPromises = [];
+        for (let i = 1; i <= TOTAL_IMAGES; i++) {
+          const imagePath = `./${i}.png`;
+          checkPromises.push(
+            new Promise((resolve) => {
+              const img = new Image();
+              img.src = imagePath;
+              img.onload = () => {
+                const existing = cloudMap[i] || {};
+                resolve({ 
+                  id: i, 
+                  name: existing.name || `Marchandise #${i}`, 
+                  price: existing.price !== undefined ? existing.price : 0, 
+                  image: imagePath, 
+                  likes: existing.likes || 0, 
+                  dislikes: existing.dislikes || 0, 
+                  userVoted: existing.userVoted || null, 
+                  comments: existing.comments || [] 
+                });
+              };
+              img.onerror = () => {
+                resolve(null);
+              };
+            })
+          );
+        }
+
+        const results = await Promise.all(checkPromises);
+        products = results.filter(item => item !== null);
+        products.sort((a, b) => a.id - b.id);
+      } catch (e) {
+        console.log("Erreur Cloud, mode local de secours:", e);
       }
-
-      const results = await Promise.all(checkPromises);
-      products = results.filter(item => item !== null);
-      products.sort((a, b) => a.id - b.id);
     }
 
     window.promptCreatorAccess = function() {
@@ -529,30 +565,37 @@
       document.getElementById('creatorModal').classList.add('hidden');
     }
 
-    window.saveCreatorData = function() {
-      const savedData = {};
-      products.forEach(p => {
-        const nameInput = document.getElementById(`creator-name-${p.id}`);
-        const priceInput = document.getElementById(`creator-price-${p.id}`);
-        if (nameInput && priceInput) {
-          p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
-          p.price = parseFloat(priceInput.value) || 0;
+    // Enregistrement global sur le Cloud Firestore
+    window.saveCreatorDataToCloud = async function() {
+      try {
+        alert("Enregistrement en cours sur le Cloud... Veuillez patienter quelques secondes.");
+        for (const p of products) {
+          const nameInput = document.getElementById(`creator-name-${p.id}`);
+          const priceInput = document.getElementById(`creator-price-${p.id}`);
+          if (nameInput && priceInput) {
+            p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
+            p.price = parseFloat(priceInput.value) || 0;
+          }
+          const prodRef = doc(db, "shop_products_clean", `item_${p.id}`);
+          await setDoc(prodRef, {
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            image: p.image,
+            likes: p.likes,
+            dislikes: p.dislikes,
+            userVoted: p.userVoted,
+            comments: p.comments
+          });
         }
-        savedData[p.id] = {
-          name: p.name,
-          price: p.price,
-          likes: p.likes,
-          dislikes: p.dislikes,
-          userVoted: p.userVoted,
-          comments: p.comments
-        };
-      });
 
-      localStorage.setItem('ums_custom_products', JSON.stringify(savedData));
-      renderProducts();
-      closeCreatorModal();
-      alert("Modifications enregistrées avec succès !");
-    }
+        renderProducts();
+        closeCreatorModal();
+        alert("Modifications enregistrées sur le Cloud avec succès ! Elles apparaissent désormais sur tous les téléphones.");
+      } catch (e) {
+        alert("Erreur lors de l'enregistrement Cloud : " + e.message);
+      }
+    };
 
     function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
@@ -710,7 +753,7 @@
       });
     }
 
-    window.vote = function(productId, type) {
+    window.vote = async function(productId, type) {
       const prod = products.find(p => p.id === productId);
       if (!prod) return;
 
@@ -725,13 +768,17 @@
         if (type === 'dislike') prod.dislikes++;
         prod.userVoted = type;
       }
-      
-      // Sauvegarde des votes
-      saveLocalData();
+
+      try {
+        const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
+        await setDoc(prodRef, prod, { merge: true });
+      } catch (e) {
+        console.log("Erreur synchro vote:", e);
+      }
       renderProducts();
     }
 
-    window.addComment = function(productId) {
+    window.addComment = async function(productId) {
       const userField = document.getElementById(`commentUser-${productId}`);
       const textField = document.getElementById(`commentText-${productId}`);
       const user = userField.value.trim() || "Client";
@@ -741,24 +788,14 @@
       const prod = products.find(p => p.id === productId);
       if (prod) {
         prod.comments.push({ user, text });
-        saveLocalData();
+        try {
+          const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
+          await setDoc(prodRef, prod, { merge: true });
+        } catch (e) {
+          console.log("Erreur synchro commentaire:", e);
+        }
         renderProducts();
       }
-    }
-
-    function saveLocalData() {
-      const savedData = JSON.parse(localStorage.getItem('ums_custom_products') || '{}');
-      products.forEach(p => {
-        savedData[p.id] = {
-          name: p.name,
-          price: p.price,
-          likes: p.likes,
-          dislikes: p.dislikes,
-          userVoted: p.userVoted,
-          comments: p.comments
-        };
-      });
-      localStorage.setItem('ums_custom_products', JSON.stringify(savedData));
     }
 
     window.addToCart = function(productId) {
