@@ -520,7 +520,8 @@
   <!-- Firebase SDKs & Script Principal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
@@ -538,6 +539,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     const PHONE_NUMBER = "243818658932";
     const TOTAL_IMAGES = 93;
@@ -590,12 +592,18 @@
       }
     }
 
-    window.promptCreatorAccess = function() {
-      const code = prompt("Mot de passe Espace Créateur :");
-      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
+    window.promptCreatorAccess = async function() {
+      try {
+        if (!auth.currentUser) {
+          const email = prompt("E-mail Espace Créateur :");
+          if (!email) return;
+          const pass = prompt("Mot de passe :");
+          if (pass === null) return;
+          await signInWithEmailAndPassword(auth, email.trim(), pass);
+        }
         openCreatorModal();
-      } else if (code !== null) {
-        alert("Mot de passe incorrect.");
+      } catch (e) {
+        alert("Connexion refusée.");
       }
     }
 
@@ -628,6 +636,7 @@
 
     window.closeCreatorModal = function() {
       document.getElementById('creatorModal').classList.add('hidden');
+      signOut(auth).catch(() => {});
     }
 
     window.saveCreatorDataToCloud = async function() {
@@ -827,7 +836,7 @@
 
       try {
         const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
-        await setDoc(prodRef, prod, { merge: true });
+        await setDoc(prodRef, { id: prod.id, likes: prod.likes, dislikes: prod.dislikes, userVoted: prod.userVoted }, { merge: true });
       } catch (e) {
         console.log("Erreur vote:", e);
       }
@@ -846,7 +855,7 @@
         prod.comments.push({ user, text });
         try {
           const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
-          await setDoc(prodRef, prod, { merge: true });
+          await setDoc(prodRef, { id: prod.id, comments: arrayUnion({ user, text }) }, { merge: true });
         } catch (e) {
           console.log("Erreur commentaire:", e);
         }
