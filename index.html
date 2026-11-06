@@ -521,7 +521,6 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
@@ -539,7 +538,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
     const PHONE_NUMBER = "243818658932";
     const TOTAL_IMAGES = 93;
@@ -675,23 +673,18 @@
           likes: cloudItem.likes || 0,
           dislikes: cloudItem.dislikes || 0,
           userVoted: cloudItem.userVoted || null,
-          comments: cloudItem.comments || []
+          comments: cloudItem.comments || [],
+          deleted: cloudItem.deleted === true
         });
       }
     }
 
-    window.promptCreatorAccess = async function() {
-      try {
-        if (!auth.currentUser) {
-          const email = prompt("E-mail Espace Créateur :");
-          if (!email) return;
-          const pass = prompt("Mot de passe :");
-          if (pass === null) return;
-          await signInWithEmailAndPassword(auth, email.trim(), pass);
-        }
+    window.promptCreatorAccess = function() {
+      const code = prompt("Mot de passe Espace Créateur :");
+      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
         openCreatorModal();
-      } catch (e) {
-        alert("Connexion refusée.");
+      } else if (code !== null) {
+        alert("Mot de passe incorrect.");
       }
     }
 
@@ -715,16 +708,37 @@
               <span class="text-xs font-bold text-amber-400">$</span>
             </div>
           </div>
+          <button data-del onclick="setProductDeleted(${p.id}, ${!p.deleted})" class="text-xs bg-red-600/80 hover:bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg w-full sm:w-auto">${p.deleted ? 'Restaurer' : 'Supprimer'}</button>
         `;
+        row.id = `creator-row-${p.id}`;
+        if (p.deleted) row.classList.add('opacity-40');
         container.appendChild(row);
       });
 
       document.getElementById('creatorModal').classList.remove('hidden');
     }
 
+    window.setProductDeleted = async function(id, flag) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      if (flag && !confirm(`Supprimer l'article #${id} (${p.name}) de la boutique ?`)) return;
+      try {
+        await setDoc(doc(db, "shop_products_clean", `item_${id}`), { id: id, deleted: flag }, { merge: true });
+        p.deleted = flag;
+        const row = document.getElementById(`creator-row-${id}`);
+        if (row) {
+          row.classList.toggle('opacity-40', flag);
+          const btn = row.querySelector('[data-del]');
+          if (btn) { btn.textContent = flag ? 'Restaurer' : 'Supprimer'; btn.setAttribute('onclick', `setProductDeleted(${id}, ${!flag})`); }
+        }
+        renderProducts();
+      } catch (e) {
+        alert("Erreur Cloud : " + e.message);
+      }
+    };
+
     window.closeCreatorModal = function() {
       document.getElementById('creatorModal').classList.add('hidden');
-      signOut(auth).catch(() => {});
     }
 
     window.saveCreatorDataToCloud = async function() {
@@ -745,7 +759,8 @@
             likes: p.likes,
             dislikes: p.dislikes,
             userVoted: p.userVoted,
-            comments: p.comments
+            comments: p.comments,
+            deleted: !!p.deleted
           });
         }
 
@@ -821,6 +836,7 @@
       const grid = document.getElementById('productsGrid');
       grid.innerHTML = '';
 
+      itemsToRender = itemsToRender.filter(p => !p.deleted);
       if (itemsToRender.length === 0) return;
 
       itemsToRender.forEach(prod => {
