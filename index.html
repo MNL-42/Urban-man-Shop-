@@ -119,9 +119,104 @@
       background: #222225;
       border-radius: 3px;
     }
+
+    /* ============ LIQUID GLASS (ajout : style uniquement) ============ */
+    :root { --lg-acc: 255,138,42; }
+
+    /* lumières colorées derrière le verre */
+    #lg-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    #lg-bg i { position: absolute; border-radius: 50%; will-change: transform; }
+    #lg-bg .b1 { width: 70vmax; height: 70vmax; left: -20vmax; top: -26vmax; background: radial-gradient(circle, rgba(var(--lg-acc),.38), rgba(var(--lg-acc),0) 66%); animation: lgF1 28s ease-in-out infinite alternate; }
+    #lg-bg .b2 { width: 62vmax; height: 62vmax; right: -24vmax; top: 18vh; background: radial-gradient(circle, rgba(125,80,255,.34), rgba(125,80,255,0) 66%); animation: lgF2 33s ease-in-out infinite alternate; }
+    #lg-bg .b3 { width: 58vmax; height: 58vmax; left: 8vw; bottom: -30vmax; background: radial-gradient(circle, rgba(30,205,190,.26), rgba(30,205,190,0) 66%); animation: lgF3 31s ease-in-out infinite alternate; }
+    @keyframes lgF1 { to { transform: translate3d(22vmax,14vmax,0) scale(1.15); } }
+    @keyframes lgF2 { to { transform: translate3d(-20vmax,-12vmax,0) scale(.92); } }
+    @keyframes lgF3 { to { transform: translate3d(18vmax,-16vmax,0) scale(1.12); } }
+
+    /* panneaux de verre : cartes, en-tête, fenêtres */
+    .glass-card, .glass-nav, .glass-modal { isolation: isolate; }
+    .glass-card, .glass-modal { position: relative; }
+    .glass-card {
+      background-color: rgba(20,20,26,.30);
+      -webkit-backdrop-filter: blur(18px) saturate(175%) brightness(1.08);
+      backdrop-filter: blur(18px) saturate(175%) brightness(1.08);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 1px rgba(255,255,255,.08), inset 0 0 22px rgba(255,255,255,.05), 0 14px 34px -10px rgba(0,0,0,.6);
+    }
+    .glass-nav {
+      background-color: rgba(10,10,14,.38);
+      -webkit-backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+      backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 10px 30px -12px rgba(0,0,0,.6);
+    }
+    .glass-modal {
+      background-color: rgba(18,18,24,.42) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.1) !important;
+      backdrop-filter: blur(28px) saturate(180%) brightness(1.1) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 0 40px rgba(255,255,255,.04), 0 30px 80px -20px rgba(0,0,0,.7);
+    }
+    /* reflet + liseré lumineux */
+    .glass-card::before, .glass-nav::before, .glass-modal::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+      background: radial-gradient(120% 85% at 22% -12%, rgba(255,255,255,.24), rgba(255,255,255,0) 52%),
+                  linear-gradient(150deg, rgba(255,255,255,.15), rgba(255,255,255,0) 36%, rgba(255,255,255,0) 64%, rgba(255,255,255,.09));
+    }
+    .glass-card::after, .glass-nav::after, .glass-modal::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px; pointer-events: none; z-index: 2;
+      background: conic-gradient(from 35deg, rgba(255,255,255,.8), rgba(255,255,255,.06) 22%, rgba(255,255,255,.42) 50%, rgba(255,255,255,.06) 76%, rgba(255,255,255,.8));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+
+    /* arrière-plans des fenêtres : voile léger au lieu du noir presque opaque */
+    #tombolaModal, #cartModal, #mobileMoneyModal, #creatorModal {
+      background-color: rgba(0,0,0,.45) !important;
+      -webkit-backdrop-filter: blur(10px) saturate(140%) !important; backdrop-filter: blur(10px) saturate(140%) !important;
+    }
+    #imageModal { background-color: rgba(0,0,0,.82) !important; }
+    .glass-modal [class*="bg-black"] { background-color: rgba(255,255,255,.05) !important; }
+
+    /* barres et zones sombres -> verre */
+    footer { background-color: rgba(12,12,16,.35) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+    #searchContainer { background-color: rgba(10,10,14,.45) !important; }
+    #pwaInstallBanner { background-image: none !important; background-color: rgba(20,20,26,.35) !important; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+    [class*="bg-neutral-900"], [class*="bg-neutral-950"] { background-color: rgba(255,255,255,.07) !important; }
+    [class*="bg-neutral-800"] { background-color: rgba(255,255,255,.12) !important; }
+    [class*="bg-neutral-"]:hover { background-color: rgba(255,255,255,.17) !important; }
+
+    /* boutons en verre teinté (sans flou supplémentaire : plus léger sur téléphone) */
+    a.bg-white, button.bg-white {
+      background-color: rgba(255,255,255,.16) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.28);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 2px rgba(255,255,255,.10), 0 10px 24px -8px rgba(0,0,0,.6) !important;
+    }
+    a.bg-white:hover, button.bg-white:hover { background-color: rgba(255,255,255,.27) !important; }
+    button.bg-emerald-600 {
+      background-color: rgba(16,185,129,.30) !important; border: 1px solid rgba(16,185,129,.55); color: #fff !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 10px 26px -8px rgba(16,185,129,.55) !important;
+    }
+    button.bg-emerald-600:hover { background-color: rgba(16,185,129,.42) !important; }
+    button[class*="from-amber-500"] {
+      background-image: none !important; background-color: rgba(var(--lg-acc),.34) !important; color: #fff !important;
+      border: 1px solid rgba(var(--lg-acc),.6);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 10px 26px -8px rgba(var(--lg-acc),.6) !important;
+    }
+    button[class*="from-amber-500"]:hover { background-color: rgba(var(--lg-acc),.46) !important; }
+    .floating-tombola {
+      background-image: none !important; background-color: rgba(var(--lg-acc),.38) !important; color: #fff !important;
+      -webkit-backdrop-filter: blur(10px) saturate(170%); backdrop-filter: blur(10px) saturate(170%);
+    }
+    button:active { transform: scale(.97); }
+
+    @media (prefers-reduced-motion: reduce) { #lg-bg i { animation: none !important; } }
+    @media (prefers-reduced-transparency: reduce) {
+      .glass-card, .glass-nav, .glass-modal, footer { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: rgba(22,22,28,.94) !important; }
+    }
   </style>
 </head>
 <body class="flex flex-col justify-between selection:bg-amber-400 selection:text-black">
+
+  <!-- Lumières derrière le verre (décor uniquement) -->
+  <div id="lg-bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
 
   <!-- En-tête / Navigation -->
   <header class="sticky top-0 z-40 glass-nav transition-all">
