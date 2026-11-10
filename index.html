@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URBAN MAN SHOP 2243</title>
+  <title>Urban Man Shop 2243 | Baskets, maillots et streetwear à Kinshasa</title>
+  <meta name="description" content="Baskets, maillots, casquettes et tenues streetwear à Kinshasa. Choisis ton article, commande sur WhatsApp et paie en cash ou en Mobile Money.">
+  <link rel="canonical" href="https://manassentambwa99-ui.github.io/Urban-man-Shop-/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Urban Man Shop 2243">
+  <meta property="og:title" content="Urban Man Shop 2243 | Streetwear à Kinshasa">
+  <meta property="og:description" content="Baskets, maillots, casquettes et tenues streetwear. Commande sur WhatsApp, paie en cash ou en Mobile Money.">
+  <meta property="og:url" content="https://manassentambwa99-ui.github.io/Urban-man-Shop-/">
+  <meta property="og:image" content="https://manassentambwa99-ui.github.io/Urban-man-Shop-/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./logo.png">
+  <link rel="apple-touch-icon" href="./logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ClothingStore","name":"Urban Man Shop 2243","url":"https://manassentambwa99-ui.github.io/Urban-man-Shop-/","image":"https://manassentambwa99-ui.github.io/Urban-man-Shop-/og-image.jpg","telephone":"+243818658932","description":"Baskets, maillots, casquettes et tenues streetwear à Kinshasa.","address":{"@type":"PostalAddress","addressLocality":"Kinshasa","addressCountry":"CD"},"paymentAccepted":"Cash, M-Pesa, Orange Money, Airtel Money"}
+  </script>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -211,180 +230,422 @@
     @media (prefers-reduced-transparency: reduce) {
       .glass-card, .glass-nav, .glass-modal, footer { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background-color: rgba(22,22,28,.94) !important; }
     }
+
+    /* ============ BOUTIQUE : refonte (composants indépendants de Tailwind) ============ */
+    :root { --text:#F6F3EC; --muted:#AAA7B2; --line:rgba(255,255,255,.12); --gold:#D4AF37; --wa:#25D366; --hh:64px; --gut:16px; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--hh) + 60px); }
+    html.u-lock { overflow: hidden; }
+    body { padding-bottom: 96px; font-size: 14px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    #imageModal { z-index: 80 !important; }
+
+    .u-wrap { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 var(--gut); }
+    .u-b { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; -webkit-appearance: none; appearance: none; }
+
+    /* ---- en-tête ---- */
+    .u-head { position: sticky; top: 0; z-index: 40; height: var(--hh); }
+    .u-head .u-wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .u-brand { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; min-width: 0; }
+    .u-brand img { width: 40px; height: 40px; flex: none; border-radius: 11px; object-fit: contain; background: #000; border: 1px solid var(--line); }
+    .u-brand b { display: block; white-space: nowrap; font-weight: 900; font-size: 16px; letter-spacing: .07em; line-height: 1; }
+    .u-brand small { display: block; margin-top: 4px; font-weight: 700; font-size: 10px; letter-spacing: .32em; color: var(--muted); line-height: 1; }
+    .u-ics { display: flex; align-items: center; gap: 8px; }
+    .u-ic { position: relative; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.08); border: 1px solid var(--line); color: var(--text); font-size: 15px; }
+    .u-ic:hover { background: rgba(255,255,255,.15); }
+    .u-ic.dim { opacity: .4; font-family: ui-monospace, monospace; font-size: 12px; }
+    .u-badge { position: absolute; top: -3px; right: -3px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; background: var(--gold); color: #000; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid #050507; }
+
+    @media (max-width: 400px) {
+      .u-ics { gap: 6px; } .u-ic { width: 37px; height: 37px; }
+      .u-brand img { width: 36px; height: 36px; } .u-brand { gap: 9px; } .u-brand b { font-size: 15px; letter-spacing: .05em; }
+      .u-tile span { left: 8px; right: 4px; font-size: 11.5px; } .u-tile small { font-size: 10.5px; }
+    }
+    @media (max-width: 380px) { .u-tile span { font-size: 10.5px; letter-spacing: -.02em; } }
+    .u-note { width: 100%; padding: 9px var(--gut); background: rgba(var(--lg-acc),.16); border-bottom: 1px solid rgba(var(--lg-acc),.3); color: var(--text); font-size: 12.5px; font-weight: 600; line-height: 1.35; text-align: center; gap: 10px; }
+    .u-note b { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+    .u-pwa { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px var(--gut); background: rgba(255,255,255,.06); border-bottom: 1px solid var(--line); font-size: 12.5px; }
+    .u-pwa i { color: var(--gold); margin-right: 8px; }
+    .u-pwa .u-b { height: 32px; padding: 0 14px; border-radius: 10px; background: var(--gold); color: #140f00; font-weight: 800; font-size: 12px; }
+
+    /* ---- accueil ---- */
+    .u-hero { padding: 22px 0 6px; }
+    .u-hero-card { border-radius: 28px; padding: 26px 20px 20px; overflow: hidden; }
+    .u-hero-card:hover { transform: none !important; }
+    .u-hero-grid { display: grid; gap: 24px; }
+    .u-place { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .u-place i { color: var(--gold); }
+    .u-h1 { margin: 12px 0 0; font-size: clamp(30px, 8.4vw, 60px); line-height: 1.03; font-weight: 900; letter-spacing: -.035em; text-wrap: balance; }
+    .u-lead { margin: 14px 0 0; max-width: 46ch; font-size: 14.5px; line-height: 1.6; color: #D6D3DC; }
+    .u-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .u-cta > .u-b { flex: 1 1 200px; }
+    @media (min-width: 520px) { .u-cta > .u-b { flex: 0 0 auto; } }
+    .u-btn-wa { height: 50px; padding: 0 22px; border-radius: 14px; background: var(--wa); color: #04210a; font-weight: 800; font-size: 14.5px; box-shadow: 0 12px 30px -10px rgba(37,211,102,.7); transition: background .2s; }
+    .u-btn-wa:hover { background: #3be07c; }
+    .u-btn-glass { height: 50px; padding: 0 20px; border-radius: 14px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.22); color: var(--text); font-weight: 700; font-size: 14.5px; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+    .u-btn-glass:hover { background: rgba(255,255,255,.18); }
+    .u-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .u-tile { position: relative; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #101015; text-align: left; display: block; }
+    .u-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+    .u-tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 42%, rgba(0,0,0,.82)); }
+    .u-tile span { position: absolute; left: 10px; right: 8px; bottom: 10px; z-index: 2; font-weight: 800; font-size: 13px; line-height: 1.15; }
+    .u-tile small { display: block; margin-top: 3px; font-weight: 600; font-size: 11px; color: #D0CDD7; }
+    @media (hover: hover) { .u-tile:hover img { transform: scale(1.06); } .u-tile:hover { border-color: rgba(212,175,55,.55); } }
+    .u-trust { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+    .u-trust div { display: flex; flex-direction: column; gap: 7px; padding: 12px 11px; border-radius: 16px; background: rgba(255,255,255,.05); border: 1px solid var(--line); font-size: 12px; font-weight: 600; line-height: 1.3; }
+    .u-trust i { color: var(--gold); font-size: 16px; }
+    @media (min-width: 900px) {
+      .u-hero-card { padding: 46px 46px 42px; }
+      .u-hero-grid { grid-template-columns: 1.1fr 1fr; align-items: center; gap: 44px; }
+      .u-tiles { gap: 14px; }
+      .u-trust div { flex-direction: row; align-items: center; gap: 12px; font-size: 13px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .u-rise { animation: uRise .75s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+      @keyframes uRise { from { opacity: 0; transform: translateY(16px); } }
+    }
+
+    /* ---- collection ---- */
+    .u-col { padding-top: 34px; }
+    .u-col-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .u-col-head h2 { margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -.025em; line-height: 1.1; }
+    .u-col-head p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
+    .u-tools { display: flex; gap: 10px; }
+    .u-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid var(--line); }
+    .u-search i { color: var(--muted); }
+    .u-search input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font: inherit; font-size: 14px; }
+    .u-search input::placeholder { color: #85828d; }
+    .u-sort { height: 46px; flex: none; width: 128px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid var(--line); color: var(--text); font: inherit; font-size: 13px; padding: 0 10px; color-scheme: dark; }
+    .u-chips { position: sticky; top: var(--hh); z-index: 30; display: flex; gap: 8px; overflow-x: auto; margin: 12px calc(var(--gut) * -1) 16px; padding: 10px var(--gut); background: rgba(5,5,7,.8); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); scrollbar-width: none; }
+    .u-chips::-webkit-scrollbar { display: none; }
+    .u-chip { flex: none; height: 36px; padding: 0 14px; border-radius: 99px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-weight: 700; font-size: 13px; color: var(--text); white-space: nowrap; }
+    .u-chip small { color: var(--muted); font-weight: 600; margin-left: 6px; font-size: 12px; }
+    .u-chip.is-on { background: var(--gold); border-color: var(--gold); color: #140f00; }
+    .u-chip.is-on small { color: rgba(20,15,0,.65); }
+
+    .u-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    @media (min-width: 640px) { .u-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+    @media (min-width: 1000px) { .u-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; } }
+    .pc { display: flex; flex-direction: column; border-radius: 18px; background: rgba(22,22,29,.62); border: 1px solid var(--line); overflow: hidden; content-visibility: auto; contain-intrinsic-size: auto 340px; box-shadow: inset 0 1px 0 rgba(255,255,255,.12); transition: border-color .25s; }
+    @media (hover: hover) { .pc:hover { border-color: rgba(212,175,55,.5); } .pc:hover .pc-open img { transform: scale(1.04); } }
+    .pc-photo { position: relative; aspect-ratio: 1; background: #0c0c10; overflow: hidden; }
+    .pc-open { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; display: block; }
+    .pc-open img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s; }
+    .pc-tag { position: absolute; top: 10px; left: 10px; padding: 4px 9px; border-radius: 99px; background: var(--gold); color: #140f00; font-size: 11px; font-weight: 800; pointer-events: none; }
+    .pc-tag2 { position: absolute; top: 10px; right: 10px; padding: 4px 9px; border-radius: 99px; background: rgba(0,0,0,.62); border: 1px solid rgba(255,255,255,.18); font-size: 11px; font-weight: 700; pointer-events: none; }
+    .pc-sw { position: absolute; left: 8px; right: 8px; bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .pc-swb { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,.55); padding: 0; background: #000; cursor: pointer; }
+    .pc-swb.on { border-color: var(--gold); }
+    .pc-swb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pc-body { display: flex; flex-direction: column; gap: 8px; padding: 12px; flex: 1; }
+    .pc-name { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.3; min-height: 2.6em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pc-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .pc-price { font-size: 19px; font-weight: 800; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+    .pc-price.ask { font-size: 13px; color: var(--muted); font-weight: 700; }
+    .pc-likes { font-size: 11.5px; color: var(--muted); }
+    .pc-actions { display: grid; grid-template-columns: 1fr 44px; gap: 8px; margin-top: auto; }
+    .btn-wa { height: 42px; border-radius: 12px; background: var(--wa); color: #04210a; font-weight: 800; font-size: 13px; transition: background .2s; }
+    .btn-wa:hover { background: #3be07c; }
+    .btn-ic { height: 42px; border-radius: 12px; background: rgba(255,255,255,.09); border: 1px solid var(--line); color: var(--text); }
+    .btn-ic:hover { background: rgba(255,255,255,.17); }
+    .u-empty { grid-column: 1 / -1; text-align: center; padding: 48px 16px; border: 1px dashed var(--line); border-radius: 20px; color: var(--muted); }
+    .u-empty b { display: block; color: var(--text); font-size: 16px; margin-bottom: 6px; }
+    .u-empty .u-cta { justify-content: center; }
+
+    /* ---- fenêtres (fiche article, panier, tombola) ---- */
+    .u-modal { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: flex; align-items: flex-end; justify-content: center; }
+    .u-sheet { width: 100%; max-height: 94vh; border-radius: 26px 26px 0 0; display: flex; flex-direction: column; overflow: hidden; animation: uUp .34s cubic-bezier(.16, 1, .3, 1); }
+    @keyframes uUp { from { transform: translateY(40px); opacity: 0; } }
+    @media (min-width: 780px) { .u-modal { align-items: center; padding: 24px; } .u-sheet { max-width: 900px; max-height: 90vh; border-radius: 26px; } }
+    .u-x { position: absolute; top: 12px; right: 12px; z-index: 5; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.22); color: #fff; font-size: 16px; }
+    .u-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+    .pm { display: grid; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 780px) { .pm { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } }
+    .pm-img { position: relative; background: #0a0a0e; aspect-ratio: 1; max-height: 52vh; width: 100%; }
+    @media (min-width: 780px) { .pm-img { max-height: none; height: 100%; min-height: 420px; } }
+    .pm-img img { width: 100%; height: 100%; object-fit: contain; display: block; cursor: zoom-in; }
+    .pm-zoom { position: absolute; left: 12px; bottom: 12px; height: 32px; padding: 0 12px; border-radius: 99px; background: rgba(0,0,0,.62); border: 1px solid rgba(255,255,255,.2); font-size: 12px; font-weight: 700; color: #fff; }
+    .pm-info { padding: 20px 18px 22px; display: flex; flex-direction: column; gap: 16px; }
+    .pm-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .pm-cat { padding: 4px 10px; border-radius: 99px; background: rgba(255,255,255,.09); border: 1px solid var(--line); font-size: 11.5px; font-weight: 700; color: #D9D6DF; }
+    .pm-new { padding: 4px 10px; border-radius: 99px; background: var(--gold); color: #140f00; font-size: 11.5px; font-weight: 800; }
+    .pm-name { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -.025em; line-height: 1.12; padding-right: 34px; }
+    .pm-price { font-size: 30px; font-weight: 900; color: var(--gold); letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1; }
+    .pm-price.ask { font-size: 16px; color: var(--muted); }
+    .pm-lbl { font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 8px; display: block; }
+    .pm-lbl b { color: var(--text); }
+    .pm-thumbs, .pm-sizes { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pm-th { width: 60px; height: 60px; border-radius: 14px; overflow: hidden; border: 2px solid transparent; padding: 0; background: #000; opacity: .7; cursor: pointer; }
+    .pm-th.on { border-color: var(--gold); opacity: 1; }
+    .pm-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pm-sz { min-width: 46px; height: 40px; padding: 0 12px; border-radius: 12px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-weight: 700; font-size: 13px; color: var(--text); cursor: pointer; }
+    .pm-sz.on { background: #fff; color: #0a0a0a; border-color: #fff; }
+    .pm-sec { border-top: 1px solid var(--line); padding-top: 14px; }
+    .pm-votes { display: flex; gap: 18px; font-size: 13px; color: var(--muted); }
+    .pm-votes .u-b { gap: 6px; height: 36px; padding: 0 4px; }
+    .pm-votes .u-b.on-like { color: #34d399; font-weight: 800; }
+    .pm-votes .u-b.on-dislike { color: #f87171; font-weight: 800; }
+    .rv-list { display: flex; flex-direction: column; gap: 8px; max-height: 170px; overflow-y: auto; margin: 10px 0; }
+    .rv { padding: 9px 11px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid var(--line); font-size: 12.5px; }
+    .rv b { color: var(--gold); margin-right: 4px; }
+    .rv-none { color: #7d7a85; font-size: 12.5px; }
+    .rv-form { display: grid; gap: 8px; }
+    .rv-form input { height: 40px; padding: 0 12px; border-radius: 12px; background: rgba(255,255,255,.07); border: 1px solid var(--line); color: var(--text); font: inherit; font-size: 13px; outline: 0; min-width: 0; }
+    .rv-form .row { display: flex; gap: 8px; }
+    .rv-form .row input { flex: 1; }
+    .rv-form .u-b { height: 40px; padding: 0 16px; border-radius: 12px; background: rgba(255,255,255,.12); font-weight: 700; font-size: 13px; }
+    .pm-rel { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .pm-rel::-webkit-scrollbar { display: none; }
+    .pm-rc { flex: none; width: 112px; text-align: left; padding: 0; background: none; border: 0; color: inherit; cursor: pointer; }
+    .pm-rc img { width: 112px; height: 112px; object-fit: cover; border-radius: 14px; border: 1px solid var(--line); display: block; background: #0c0c10; }
+    .pm-rc span { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .pm-rc b { display: block; margin-top: 2px; font-size: 13px; color: var(--gold); }
+    .u-foot { display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(8,8,11,.7); }
+    .u-foot .btn-wa { flex: 1; height: 52px; font-size: 15px; border-radius: 14px; }
+    .u-foot .btn-ic { width: 52px; height: 52px; border-radius: 14px; flex: none; }
+
+    /* panier */
+    .u-drawer-bg { justify-content: flex-end; align-items: stretch; }
+    .u-drawer { width: 100%; max-width: 430px; height: 100%; display: flex; flex-direction: column; overflow: hidden; border-radius: 0; animation: uIn .32s cubic-bezier(.16, 1, .3, 1); }
+    @keyframes uIn { from { transform: translateX(30px); opacity: 0; } }
+    .u-dh { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 14px; border-bottom: 1px solid var(--line); }
+    .u-dh h3 { margin: 0; font-size: 17px; font-weight: 800; }
+    .u-dh .u-ic { width: 38px; height: 38px; }
+    .u-list { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .ci { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid var(--line); }
+    .ci img { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; flex: none; background: #000; }
+    .ci-t { flex: 1; min-width: 0; }
+    .ci-t b { display: block; font-size: 13px; font-weight: 700; line-height: 1.25; }
+    .ci-t small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+    .ci-t em { display: block; font-style: normal; color: var(--gold); font-weight: 800; font-size: 13px; margin-top: 3px; }
+    .ci-q { display: flex; align-items: center; gap: 4px; }
+    .ci-q .u-b { width: 30px; height: 30px; border-radius: 9px; background: rgba(255,255,255,.1); font-weight: 800; }
+    .ci-q span { min-width: 20px; text-align: center; font-weight: 800; font-size: 13px; }
+    .u-df { padding: 14px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(8,8,11,.7); display: grid; gap: 10px; }
+    .u-total { display: flex; align-items: baseline; justify-content: space-between; font-weight: 700; }
+    .u-total b { font-size: 24px; font-weight: 900; color: var(--gold); }
+    .u-df .btn-wa { height: 52px; font-size: 15px; border-radius: 14px; }
+    .u-df .u-btn-glass { height: 46px; font-size: 13.5px; }
+    .u-note2 { font-size: 11.5px; color: var(--muted); text-align: center; margin: 0; }
+
+    /* tombola */
+    .tb { padding: 18px 18px 8px; display: grid; gap: 14px; }
+    .tb-img { border-radius: 18px; overflow: hidden; background: #0a0a0e; border: 1px solid var(--line); }
+    .tb-img img { width: 100%; max-height: 50vh; object-fit: contain; display: block; }
+    .tb h3 { margin: 0; font-size: 20px; font-weight: 900; letter-spacing: -.02em; }
+    .tb-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .tb-facts div { padding: 10px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+    .tb-facts b { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
+    .tb ol { margin: 0; padding-left: 22px; list-style: decimal; color: #D6D3DC; font-size: 13.5px; line-height: 1.6; }
+
+    /* barre panier, boutons flottants, notification */
+    .u-cbar { position: fixed; left: 12px; right: 84px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 45; height: 56px; border-radius: 18px; background: var(--gold); color: #140f00; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 14px; box-shadow: 0 14px 30px -10px rgba(212,175,55,.65); }
+    .u-cbar span { display: flex; align-items: center; gap: 10px; }
+    .u-fabs { position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 44; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .u-fab-lbl { font-size: 10px; font-weight: 800; color: var(--gold); background: rgba(0,0,0,.78); border: 1px solid rgba(212,175,55,.35); border-radius: 99px; padding: 2px 8px; margin-bottom: -6px; position: relative; z-index: 2; }
+    .u-fab { width: 56px; height: 56px; border-radius: 50%; font-size: 24px; }
+    .u-fab.wa { background: var(--wa); color: #04210a; font-size: 30px; box-shadow: 0 10px 28px -6px rgba(37,211,102,.65); }
+    .u-fab.tb { border: 2px solid rgba(255,255,255,.22); font-size: 22px; }
+    .u-toast { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 90; padding: 11px 18px; border-radius: 14px; background: rgba(20,20,26,.95); border: 1px solid var(--line); color: #fff; font-size: 13px; font-weight: 700; box-shadow: 0 12px 30px -8px rgba(0,0,0,.7); white-space: nowrap; max-width: 92vw; overflow: hidden; text-overflow: ellipsis; }
+
+    /* pied de page */
+    .u-foot-site { margin-top: 56px; padding: 40px 0 28px; }
+    .u-fg { display: grid; gap: 28px; }
+    @media (min-width: 780px) { .u-fg { grid-template-columns: 1.3fr 1fr 1fr; } }
+    .u-fg h4 { margin: 0 0 10px; font-size: 13px; font-weight: 800; }
+    .u-fg p, .u-fg a, .u-fg .u-b { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .u-fg a, .u-fg .u-b { display: block; text-decoration: none; }
+    .u-fg a:hover, .u-fg .u-b:hover { color: var(--text); }
+    .u-fg .u-brand b { font-size: 15px; }
+    .u-pay { display: flex; flex-wrap: wrap; gap: 8px; }
+    .u-pay span { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border-radius: 99px; border: 1px solid var(--line); background: rgba(255,255,255,.05); font-size: 11.5px; font-weight: 800; color: var(--text); }
+    .u-pay i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+    .u-legal { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 11.5px; color: #7d7a85; }
+    .u-legal .u-b { color: #55525c; font-family: ui-monospace, monospace; padding: 4px 8px; }
+
+    @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .u-sheet, .u-drawer { animation: none; } }
   </style>
 </head>
-<body class="flex flex-col justify-between selection:bg-amber-400 selection:text-black">
+<body class="flex flex-col selection:bg-amber-400 selection:text-black">
 
   <!-- Lumières derrière le verre (décor uniquement) -->
   <div id="lg-bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
 
-  <!-- En-tête / Navigation -->
-  <header class="sticky top-0 z-40 glass-nav transition-all">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#" class="flex items-center space-x-3 group">
-        <div class="relative p-0.5 rounded-lg bg-gradient-to-r from-neutral-700 to-neutral-900 group-hover:from-amber-500 group-hover:to-yellow-300 transition duration-300">
-          <img src="./logo.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=UMS'" alt="Logo Urban Man Shop" class="h-10 w-10 object-contain rounded-md bg-black">
-        </div>
-        <div>
-          <h1 class="font-black text-lg tracking-wider uppercase leading-none text-white group-hover:text-amber-400 transition">URBAN MAN</h1>
-          <span class="text-[10px] text-neutral-400 font-bold tracking-[0.25em] block">SHOP 2243</span>
-        </div>
+  <!-- En-tête -->
+  <header class="u-head glass-nav">
+    <div class="u-wrap">
+      <a href="./" class="u-brand" aria-label="Urban Man Shop 2243, accueil">
+        <img src="./logo.png" alt="" onerror="this.style.visibility='hidden'">
+        <span><b>URBAN MAN</b><small>SHOP 2243</small></span>
       </a>
-
-      <div class="flex items-center space-x-2.5">
-        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-amber-400 transition border border-neutral-800 font-mono text-xs shadow">
-          @
-        </button>
-        <button onclick="toggleSearch()" class="p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
-          <i class="fa-solid fa-magnifying-glass text-sm"></i>
-        </button>
-        <button onclick="openCart()" class="relative p-2.5 rounded-full bg-neutral-900/80 hover:bg-neutral-800 text-neutral-300 hover:text-white transition border border-neutral-800">
-          <i class="fa-solid fa-bag-shopping text-sm"></i>
-          <span id="cartBadge" class="absolute -top-1 -right-1 bg-amber-400 text-black font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-black hidden">0</span>
-        </button>
-      </div>
-    </div>
-
-    <div id="searchContainer" class="hidden border-t border-neutral-800/60 bg-black/90 backdrop-blur-lg px-4 py-3">
-      <div class="max-w-6xl mx-auto flex items-center bg-neutral-900/90 border border-neutral-700/60 rounded-xl px-4 py-2.5">
-        <i class="fa-solid fa-search text-neutral-400 mr-3"></i>
-        <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Rechercher un produit..." class="bg-transparent text-sm text-white focus:outline-none w-full">
-        <button onclick="toggleSearch()" class="text-neutral-400 hover:text-white ml-2">
-          <i class="fa-solid fa-times"></i>
+      <div class="u-ics">
+        <button class="u-b u-ic dim" onclick="promptCreatorAccess()" title="Espace Créateur" aria-label="Espace Créateur">@</button>
+        <button class="u-b u-ic" onclick="focusSearch()" aria-label="Rechercher un article"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="u-b u-ic" onclick="openCart()" aria-label="Ouvrir le panier">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span id="cartBadge" class="u-badge" hidden>0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Bannière PWA -->
-  <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border-b border-neutral-800 px-4 py-2.5 flex items-center justify-between text-xs">
-    <div class="flex items-center space-x-3">
-      <i class="fa-solid fa-mobile-screen-button text-amber-400 text-base"></i>
-      <span>Installez l'application <b>Urban Man Shop</b> !</span>
-    </div>
-    <button onclick="installPwa()" class="bg-white text-black font-bold px-4 py-1.5 rounded-lg hover:bg-neutral-200 transition text-xs">
-      Installer
-    </button>
+  <button class="u-b u-note" onclick="openTombolaModal()">
+    <i class="fa-solid fa-gift" style="color:var(--gold)"></i>
+    <span>Grande Tombola : ticket à 5 $, tirage du 14 au 18 décembre 2026.</span>
+    <b>Participer</b>
+  </button>
+
+  <div id="pwaInstallBanner" class="u-pwa" hidden>
+    <span><i class="fa-solid fa-mobile-screen-button"></i>Installe l'appli <b>Urban Man Shop</b> sur ton téléphone</span>
+    <button class="u-b" onclick="installPwa()">Installer</button>
   </div>
 
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden pt-8 pb-6 px-4">
-    <div class="max-w-6xl mx-auto">
-      <div class="glass-card rounded-3xl p-6 md:p-10 relative overflow-hidden animate-glow">
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 -top-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="relative z-10 max-w-2xl space-y-4">
-          <div class="inline-flex items-center space-x-2 bg-neutral-900/80 border border-neutral-700/50 px-3 py-1 rounded-full text-xs font-semibold text-amber-400">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Style respect qualité • Si tu veux t'imposer c'est ici que ça se passe</span>
+  <!-- Accueil -->
+  <section class="u-hero">
+    <div class="u-wrap">
+      <div class="glass-card u-hero-card">
+        <div class="u-hero-grid">
+          <div>
+            <span class="u-place u-rise" style="--i:0"><i class="fa-solid fa-location-dot"></i>Kinshasa, RDC</span>
+            <h2 class="u-h1 u-rise" style="--i:1">Si tu veux t'imposer, c'est ici que ça se passe.</h2>
+            <p class="u-lead u-rise" style="--i:2">Baskets, maillots, casquettes et tenues streetwear. Tu choisis, tu commandes sur WhatsApp, tu paies en cash ou en Mobile Money.</p>
+            <div class="u-cta u-rise" style="--i:3">
+              <a class="u-b u-btn-wa" href="https://wa.me/243818658932?text=Bonjour%20Urban%20Man%20Shop%202243%2C%20j%27ai%20une%20question." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp" style="font-size:20px"></i>Commander sur WhatsApp</a>
+              <a class="u-b u-btn-glass" href="#collection">Voir la collection</a>
+            </div>
           </div>
-
-          <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight uppercase">
-            Bienvenue chez <br><span class="text-gradient-gold">Urban Man Shop 2243</span>
-          </h2>
-
-          <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed">
-            Découvrez la crème du streetwear masculin. Des collections exclusives, une qualité irréprochable et un service sur-mesure. Commandez directement en toute transparence.
-          </p>
-
-          <div class="flex flex-wrap gap-3 pt-2">
-            <a href="#catalogues" class="bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-neutral-200 transition text-xs sm:text-sm flex items-center space-x-2 shadow-lg">
-              <span>Explorer la Collection</span>
-              <i class="fa-solid fa-arrow-down text-xs"></i>
-            </a>
+          <div class="u-tiles u-rise" style="--i:4" id="heroTiles">
+            <button class="u-b u-tile" data-cat="chaussures" onclick="goCat('chaussures')"><img alt="" id="tileImg-chaussures" onerror="this.style.display='none'"><span>Chaussures<small id="tileN-chaussures"></small></span></button>
+            <button class="u-b u-tile" data-cat="maillots" onclick="goCat('maillots')"><img alt="" id="tileImg-maillots" onerror="this.style.display='none'"><span>Maillots<small id="tileN-maillots"></small></span></button>
+            <button class="u-b u-tile" data-cat="casquettes" onclick="goCat('casquettes')"><img alt="" id="tileImg-casquettes" onerror="this.style.display='none'"><span>Casquettes<small id="tileN-casquettes"></small></span></button>
           </div>
         </div>
+      </div>
+      <div class="u-trust">
+        <div><i class="fa-solid fa-wallet"></i>Cash ou Mobile Money</div>
+        <div><i class="fa-brands fa-whatsapp"></i>Commande confirmée sur WhatsApp</div>
+        <div><i class="fa-solid fa-tag"></i>Prix clairs, en dollars</div>
       </div>
     </div>
   </section>
 
-  <!-- Bouton Flottant Tombola -->
-  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-center">
-    <span class="text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded-full border border-amber-500/30 mb-1 shadow">Tombola</span>
-    <button onclick="openTombolaModal()" class="floating-tombola w-14 h-14 bg-gradient-to-tr from-amber-600 to-yellow-400 text-black rounded-full flex items-center justify-center shadow-2xl border-2 border-white/20 hover:scale-110 transition">
-      <i class="fa-solid fa-gift text-xl"></i>
-    </button>
-  </div>
-
-  <!-- Contenu Principal -->
-  <main id="catalogues" class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-800/80 pb-4">
+  <!-- Collection -->
+  <main id="collection" class="u-wrap u-col" style="flex:1 0 auto">
+    <div class="u-col-head">
       <div>
-        <h3 class="text-xl font-extrabold uppercase tracking-wide flex items-center text-gradient-gold">
-          <span class="w-2 h-6 bg-amber-400 rounded-full mr-3"></span>
-          Collection Exclusive
-        </h3>
-        <p class="text-xs text-neutral-400 mt-0.5">Cliquez sur une photo pour l'agrandir et zoomer</p>
-      </div>
-
-      <div class="flex items-center space-x-2 text-xs text-neutral-400">
-        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-        <span>Paiement Cash & Mobile Money</span>
+        <h2>La collection</h2>
+        <p id="resultCount">Chargement…</p>
       </div>
     </div>
-
-    <!-- Grille de Produits instantanée -->
-    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div class="u-tools">
+      <label class="u-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="searchInput" placeholder="Chercher un article" autocomplete="off" aria-label="Rechercher un article">
+      </label>
+      <select id="sortSel" class="u-sort" aria-label="Trier les articles">
+        <option value="new">Nouveautés</option>
+        <option value="asc">Prix croissant</option>
+        <option value="desc">Prix décroissant</option>
+      </select>
+    </div>
+    <div class="u-chips" id="chips" role="group" aria-label="Catégories"></div>
+    <div id="productsGrid" class="u-grid" aria-live="polite"></div>
   </main>
 
   <!-- Pied de page -->
-  <footer class="bg-black/80 border-t border-neutral-900/80 py-10 px-4 text-center text-xs text-neutral-500 mt-12 backdrop-blur-md">
-    <div class="max-w-6xl mx-auto space-y-5">
-      <div class="flex flex-col items-center justify-center space-y-2">
-        <h4 class="font-black text-base text-white tracking-widest uppercase">URBAN MAN SHOP 2243</h4>
-        <p class="text-neutral-400 max-w-md">Style, respect, qualité : si tu veux t'imposer, c'est ici que ça se passe.</p>
+  <footer class="u-foot-site">
+    <div class="u-wrap">
+      <div class="u-fg">
+        <div>
+          <a href="./" class="u-brand" style="margin-bottom:12px"><img src="./logo.png" alt="" onerror="this.style.visibility='hidden'"><span><b>URBAN MAN</b><small>SHOP 2243</small></span></a>
+          <p>Style, respect, qualité : si tu veux t'imposer, c'est ici que ça se passe.</p>
+        </div>
+        <div>
+          <h4>Commander</h4>
+          <a href="https://wa.me/243818658932" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> +243 818 658 932</a>
+          <p>Kinshasa, RDC</p>
+          <button class="u-b" onclick="openTombolaModal()" style="justify-content:flex-start">Grande Tombola</button>
+          <button class="u-b" id="footInstall" onclick="installPwa()" style="justify-content:flex-start" hidden>Installer l'appli</button>
+        </div>
+        <div>
+          <h4>Paiement</h4>
+          <div class="u-pay">
+            <span><i style="background:#4CAF50"></i>M-Pesa</span>
+            <span><i style="background:#FF7900"></i>Orange Money</span>
+            <span><i style="background:#E40000"></i>Airtel Money</span>
+            <span><i style="background:var(--gold)"></i>Cash</span>
+          </div>
+        </div>
       </div>
-      
-      <div class="flex justify-center items-center space-x-3 py-2">
-        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-amber-400 font-bold">M-PESA</span>
-        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-orange-400 font-bold">ORANGE MONEY</span>
-        <span class="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] text-red-400 font-bold">AIRTEL MONEY</span>
+      <div class="u-legal">
+        <span>&copy; 2026 Urban Man Shop 2243. Tous droits réservés.</span>
+        <button class="u-b" onclick="promptCreatorAccess()" title="Espace Créateur" aria-label="Espace Créateur">@</button>
       </div>
-
-      <div class="flex justify-center items-center space-x-5 pt-2">
-        <a href="https://wa.me/243818658932" target="_blank" class="text-neutral-400 hover:text-green-400 text-xl transition">
-          <i class="fa-brands fa-whatsapp"></i>
-        </a>
-        <button onclick="promptCreatorAccess()" title="Espace Créateur" class="text-neutral-700 hover:text-neutral-400 font-mono text-sm px-2 py-1">
-          @
-        </button>
-      </div>
-
-      <p class="text-[10px] text-neutral-600">&copy; 2026 URBAN MAN SHOP 2243. Tous droits réservés.</p>
     </div>
   </footer>
 
-  <!-- Modal Tombola -->
-  <div id="tombolaModal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-modal rounded-3xl w-full max-w-md overflow-hidden border border-amber-500/40 shadow-2xl animate-fade-in relative">
-      <div class="absolute -right-12 -top-12 w-40 h-40 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
-      
-      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/60">
-        <h3 class="font-bold text-sm flex items-center text-amber-400">
-          <i class="fa-solid fa-gift mr-2 animate-bounce"></i> Grande Tombola Urban Man Shop
-        </h3>
-        <button onclick="closeTombolaModal()" class="text-neutral-400 hover:text-white p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+  <!-- Barre panier + boutons flottants -->
+  <button id="cartBar" class="u-b u-cbar" onclick="openCart()" hidden>
+    <span><i class="fa-solid fa-bag-shopping"></i><b id="cbCount">0 article</b></span>
+    <span><b id="cbTotal"></b>Voir le panier</span>
+  </button>
+  <div class="u-fabs">
+    <span class="u-fab-lbl">Tombola</span>
+    <button class="u-b u-fab tb floating-tombola" onclick="openTombolaModal()" aria-label="Grande Tombola"><i class="fa-solid fa-gift"></i></button>
+    <a class="u-b u-fab wa" href="https://wa.me/243818658932?text=Bonjour%20Urban%20Man%20Shop%202243%2C%20j%27ai%20une%20question." target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+  </div>
+  <div id="toast" class="u-toast" role="status" hidden></div>
+
+  <!-- Fenêtre Tombola -->
+  <div id="tombolaModal" class="u-modal" hidden onclick="if(event.target===this)closeTombolaModal()">
+    <div class="u-sheet glass-modal" role="dialog" aria-modal="true" aria-labelledby="tbTitle">
+      <button class="u-b u-x" onclick="closeTombolaModal()" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+      <div class="u-scroll">
+        <div class="tb">
+          <div class="tb-img"><img src="./B.jpg" alt="Affiche de la Grande Tombola Urban Man Shop 2243" onerror="this.parentNode.hidden=true"></div>
+          <h3 id="tbTitle">Grande Tombola : tente ta chance et gagne</h3>
+          <div class="tb-facts">
+            <div><b>5 $</b>le ticket</div>
+            <div><b>14 au 18 déc.</b>tirage 2026</div>
+            <div><b>2 ou 3</b>articles à remporter</div>
+          </div>
+          <ol>
+            <li>Remplis le formulaire : nom, postnom, numéro WhatsApp et e-mail.</li>
+            <li>Envoie 5 $ en Mobile Money et garde le SMS de confirmation.</li>
+            <li>Une fois ton paiement validé, ton billet reçoit un code unique et un QR code de vérification.</li>
+          </ol>
+        </div>
       </div>
+      <div class="u-foot">
+        <a class="u-b btn-wa" style="height:52px;font-size:15px;border-radius:14px" href="https://urbanmanshop.lovable.app" target="_blank" rel="noopener"><i class="fa-solid fa-ticket"></i>Recevoir mon billet</a>
+        <button class="u-b btn-ic" onclick="participateTombola()" aria-label="Poser une question sur WhatsApp" title="Une question ? WhatsApp"><i class="fa-brands fa-whatsapp" style="font-size:22px"></i></button>
+      </div>
+    </div>
+  </div>
 
-      <div class="p-6 text-center space-y-4">
-        <div class="relative overflow-hidden rounded-2xl aspect-video bg-neutral-950 border border-neutral-800 shadow-inner">
-          <img src="./B.jpg" onerror="this.src='https://via.placeholder.com/500x300/111/D4AF37?text=Tombola+Urban+Man'" alt="Tombola B.jpg" class="w-full h-full object-cover">
-        </div>
+  <!-- Fiche article -->
+  <div id="productModal" class="u-modal" hidden onclick="if(event.target===this)closeProduct()">
+    <div class="u-sheet glass-modal" role="dialog" aria-modal="true" aria-labelledby="pmName">
+      <button class="u-b u-x" onclick="closeProduct()" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
+      <div class="u-scroll" id="pmBody"></div>
+      <div class="u-foot" id="pmFoot"></div>
+    </div>
+  </div>
 
-        <div class="space-y-2">
-          <h4 class="font-extrabold text-base text-white uppercase tracking-wide">Tentez de remporter vos articles !</h4>
-          <p class="text-xs text-neutral-300 leading-relaxed">
-            Chaque heure, Urban Man Shop gâte ses clients ! Cliquez ci-dessous pour valider votre participation et tenter de gagner des pièces exclusives de notre collection.
-          </p>
-        </div>
-
-        <button onclick="participateTombola()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black py-3 rounded-xl transition text-xs shadow-lg flex items-center justify-center space-x-2">
-          <i class="fa-solid fa-ticket"></i>
-          <span>Je participe à la Tombola !</span>
-        </button>
+  <!-- Panier -->
+  <div id="cartModal" class="u-modal u-drawer-bg" hidden onclick="if(event.target===this)closeCart()">
+    <div class="u-drawer glass-modal" role="dialog" aria-modal="true" aria-label="Mon panier">
+      <div class="u-dh">
+        <h3><i class="fa-solid fa-bag-shopping" style="color:var(--gold);margin-right:8px"></i>Mon panier</h3>
+        <button class="u-b u-ic" onclick="closeCart()" aria-label="Fermer le panier"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="cartItemsList" class="u-list"></div>
+      <div class="u-df">
+        <div class="u-total"><span>Total estimé</span><b id="cartTotalPrice">0 $</b></div>
+        <button class="u-b btn-wa" onclick="sendCartToWhatsApp()"><i class="fa-brands fa-whatsapp" style="font-size:20px"></i>Commander sur WhatsApp</button>
+        <button class="u-b u-btn-glass" onclick="openMobileMoneyModal()"><i class="fa-solid fa-mobile-retro"></i>Payer par Mobile Money</button>
+        <p class="u-note2">Tu confirmes la disponibilité avec nous sur WhatsApp.</p>
       </div>
     </div>
   </div>
@@ -398,40 +659,6 @@
       <img id="zoomedImage" onclick="toggleZoom()" src="" alt="Zoom" class="max-h-[80vh] max-w-full object-contain rounded-xl select-none">
     </div>
     <p class="text-xs text-neutral-400 mt-4 tracking-wide">Cliquez sur l'image pour zoomer / dézoomer</p>
-  </div>
-
-  <!-- Modal Panier -->
-  <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex justify-end">
-    <div class="glass-modal w-full max-w-md h-full flex flex-col border-l border-neutral-800">
-      <div class="p-4 border-b border-neutral-800 flex items-center justify-between">
-        <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-bag-shopping mr-2 text-amber-400"></i> Mon Panier
-        </h3>
-        <button onclick="closeCart()" class="text-neutral-400 hover:text-white p-2">
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
-
-      <div id="cartItemsList" class="flex-grow overflow-y-auto p-4 space-y-4"></div>
-
-      <div class="p-4 border-t border-neutral-800/80 space-y-3 bg-black/60">
-        <div class="flex justify-between items-center text-sm font-bold">
-          <span>Total Estimé :</span>
-          <span id="cartTotalPrice" class="text-xl font-extrabold text-amber-400">0 $</span>
-        </div>
-
-        <div class="grid grid-cols-1 gap-2 pt-1">
-          <button onclick="sendCartToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            <span>Valider sur WhatsApp (avec images)</span>
-          </button>
-          <button onclick="openMobileMoneyModal()" class="w-full bg-neutral-900 border border-emerald-500/40 text-emerald-400 font-bold py-2.5 rounded-xl hover:bg-neutral-800 transition text-xs flex items-center justify-center space-x-2">
-            <i class="fa-solid fa-mobile-retro"></i>
-            <span>Payer par Mobile Money</span>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Modal Mobile Money -->
@@ -499,28 +726,37 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur - Synchronisation des Prix
+          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur
         </h3>
-        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white">
+        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white" aria-label="Fermer">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
 
+      <div id="creatorDelBar" class="px-4 py-3 border-b border-neutral-800 bg-black/70 text-xs space-y-2">
+        <div id="creatorDelCount" class="text-neutral-300"></div>
+        <div id="creatorDelWarn" class="hidden text-amber-400">Firebase refuse l'écriture : l'article est masqué seulement sur ce téléphone. Appuie sur « Tester Firebase » pour voir pourquoi.</div>
+        <div id="creatorDiag" class="text-emerald-300 font-semibold"></div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="testFirebase()" class="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-3 py-1.5 rounded-lg">Tester Firebase</button>
+          <button onclick="copyForCode()" class="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-3 py-1.5 rounded-lg">Copier pour le code</button>
+        </div>
+      </div>
+
       <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
 
-      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center">
-        <span class="text-xs text-neutral-400">Modifie les prix et enregistre sur le Cloud</span>
-        <button onclick="saveCreatorDataToCloud()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
-          Enregistrer sur le Cloud
+      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center gap-3">
+        <span class="text-xs text-neutral-400">Change un nom ou un prix, puis enregistre. Seules les lignes modifiées sont envoyées.</span>
+        <button id="creatorSaveBtn" onclick="saveCreatorDataToCloud()" class="shrink-0 bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+          Enregistrer
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Firebase SDKs & Script Principal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeFirestore, collection, getDocs, doc, setDoc, writeBatch, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
@@ -537,11 +773,32 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Connexion adaptée aux réseaux mobiles : bascule toute seule en "long polling" si le flux normal est bloqué.
+    const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true });
+    const COL = "shop_products_clean";
 
+    // Statistiques de visite (Firebase Analytics) : chargées à part, le site marche même si elles échouent.
+    let analytics = null;
+    async function initAnalytics() {
+      try { const m = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js"); analytics = { a: m.getAnalytics(app), log: m.logEvent }; } catch (e) {}
+    }
+    function track(name, params) { try { if (analytics) analytics.log(analytics.a, name, params || {}); } catch (e) {} }
+
+    /* ================= RÉGLAGES (à modifier ici) ================= */
     const PHONE_NUMBER = "243818658932";
-    const TOTAL_IMAGES = 93;
-    // Noms et prix de départ (issus de ta liste WhatsApp). Les valeurs enregistrées sur Firebase gardent la priorité.
+    // Numéro de la dernière photo en ligne (N.png). Les numéros 94 à 106 sont déjà prévus :
+    // tant que la photo n'est pas envoyée sur GitHub, l'article reste invisible. Pour aller plus loin, augmente ce nombre.
+    const TOTAL_IMAGES = 106;
+    const DERNIER_ANCIEN = 93;
+    // Articles identiques en plusieurs couleurs : une seule fiche, avec le choix du coloris.
+    // Exemple : { ids: [94, 95, 96], couleurs: ["Noir", "Blanc", "Rouge"] }  (couleurs est facultatif)
+    // Pour afficher chaque photo séparément, mets simplement : const GROUPES = [];
+    const GROUPES = [ { ids: [94, 95, 96], couleurs: [] } ];
+    // Articles supprimés pour tout le monde (numéros). Cette liste marche SANS cloud.
+    const SUPPRIMES = [];
+    // Photos mises en avant sur l'accueil (une par catégorie).
+    const HERO_PICKS = { chaussures: 27, maillots: 25, casquettes: 38 };
+    // Noms et prix : ce code fait foi. Le cloud ne les remplace que s'ils ont été enregistrés depuis l'Espace Créateur.
     const PRODUITS_PAR_DEFAUT = {
       2: { n: "Crocs Bape", p: 20 },
       3: { n: "Crocs Marvel", p: 35 },
@@ -626,473 +883,612 @@
       92: { n: "Casquette", p: 22 },
       93: { n: "Travis Scott", p: 25 }
     };
-    
+    /* ============================================================= */
+
+    const $ = id => document.getElementById(id);
+    const ls = {
+      get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+      set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    };
+    const CATS = [['all', 'Tout'], ['chaussures', 'Chaussures'], ['maillots', 'Maillots'], ['casquettes', 'Casquettes'], ['vetements', 'Vêtements']];
+    const CAT_LABEL = { chaussures: 'Chaussures', maillots: 'Maillots', casquettes: 'Casquettes', vetements: 'Vêtements', autres: 'Article' };
+    const SIZES = { chaussures: ['39', '40', '41', '42', '43', '44', '45', '46'], maillots: ['S', 'M', 'L', 'XL', 'XXL'], vetements: ['S', 'M', 'L', 'XL', 'XXL'] };
+    const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#14141a"/><text x="100" y="106" fill="#66636d" font-family="sans-serif" font-size="13" text-anchor="middle">Photo à venir</text></svg>');
+    window.UM_PH = PLACEHOLDER;
+
     let products = [];
-    let cart = [];
+    let cart = ls.get('um_cart', []);
     let deferredPrompt = null;
+    let cloudRefused = false;
+    let openEid = null;
+    const myVotes = ls.get('um_votes', {});
+    const missing = new Set();          // photos introuvables (nouveautés pas encore envoyées)
+    const selVar = {};                  // coloris choisi par fiche
+    const selSize = {};                 // taille choisie par fiche
+    const state = { q: '', cat: 'all', sort: 'new' };
+    const groupOf = {};
+    GROUPES.forEach((g, gi) => g.ids.forEach(id => { groupOf[id] = gi; }));
 
-    window.addEventListener("DOMContentLoaded", async () => {
-      requestNotificationPermission();
-      await loadShopData();
-      renderProducts();
-      updateCartBadge();
-      registerServiceWorker();
-    });
+    /* ---------- outils ---------- */
+    function escapeHtml(t) {
+      return String(t == null ? '' : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+    const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const isGeneric = n => /^(Marchandise|Article) #\d+$/.test(String(n || ''));
+    const absUrl = rel => { try { return new URL(rel, location.href).href; } catch (e) { return rel; } };
+    const priceTxt = p => p > 0 ? p + ' $' : 'Prix sur demande';
+    const BASE = (() => { try { return new URL('./', location.href).href; } catch (e) { return ''; } })();
+    function withTimeout(p, ms) {
+      return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error('timeout'), { code: 'timeout' })), ms))]);
+    }
+    function friendly(e) {
+      const c = e && e.code;
+      if (c === 'permission-denied') return "Firebase refuse l'écriture. Colle les règles dans Firestore > Règles > Publier.";
+      if (c === 'timeout') return "Pas de réponse de Firebase (connexion trop lente ou bloquée).";
+      if (c === 'unavailable') return "Firebase est injoignable (vérifie ta connexion).";
+      if (c === 'resource-exhausted') return "Quota Firebase du jour atteint. Réessaie demain.";
+      return "Erreur Firebase : " + (c ? c + ' - ' : '') + (e && e.message ? e.message : e);
+    }
+    let toastT;
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.hidden = false;
+      clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2300);
+    }
+    function lock() {
+      const open = ['productModal', 'cartModal', 'tombolaModal'].some(id => !$(id).hidden);
+      document.documentElement.classList.toggle('u-lock', open);
+    }
+    function readLocalHidden() { return ls.get('um_hidden', {}) || {}; }
+    function writeLocalHidden(o) { ls.set('um_hidden', o); }
 
-    function requestNotificationPermission() {
-      if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
-      }
+    /* ---------- catégories ---------- */
+    function categoryOf(name) {
+      const n = norm(name);
+      if (/maillot/.test(n)) return 'maillots';
+      if (/casquette|\bcap\b|\bbob\b|bonnet/.test(n)) return 'casquettes';
+      if (/\bt-?shirt\b|\btee\b|culotte|\bshorts?\b|polo|ralph|\btech\b|ensemble|nocta|survet|jogging|veste|\bpull|hoodie|sweat|\bjeans?\b|chemise|pantalon/.test(n)) return 'vetements';
+      if (/crocs|birkenstock|\bvans\b|samba|\btn\b|air max|vomero|shox|jordan|asics|kayano|prada|running|travis|corteiz|nike|adidas|puma|new balance|basket|sneaker|chaussure|sandale|claquette|mocassin/.test(n)) return 'chaussures';
+      return 'autres';
     }
 
-    // Chargement instantané sans blocage
-    async function loadShopData() {
-      let cloudPrices = {};
-
-      try {
-        const querySnapshot = await getDocs(collection(db, "shop_products_clean"));
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          cloudPrices[data.id] = data;
-        });
-      } catch (e) {
-        console.log("Mode hors-ligne:", e);
-      }
-
-      products = [];
+    /* ---------- données ---------- */
+    function buildProducts(cloud) {
+      const loc = readLocalHidden(), out = [];
       for (let i = 1; i <= TOTAL_IMAGES; i++) {
-        const cloudItem = cloudPrices[i] || {};
-        const generic = `Marchandise #${i}`;
+        const c = cloud[i] || {};
         const def = PRODUITS_PAR_DEFAUT[i] || {};
-        const customName = cloudItem.name && cloudItem.name !== generic;
-        products.push({
+        const fromCloud = c.rev === 2;
+        const customName = fromCloud && c.name && !isGeneric(c.name);
+        const hidden = SUPPRIMES.includes(i) ? true : (String(i) in loc ? loc[String(i)] : c.hidden === true);
+        out.push({
           id: i,
-          name: customName ? cloudItem.name : (def.n || generic),
-          price: cloudItem.price > 0 ? cloudItem.price : (def.p || 0),
+          name: customName ? c.name : (def.n || `Article #${i}`),
+          price: (fromCloud && c.price > 0) ? c.price : (def.p || 0),
           image: `./${i}.png`,
-          likes: cloudItem.likes || 0,
-          dislikes: cloudItem.dislikes || 0,
-          userVoted: cloudItem.userVoted || null,
-          comments: cloudItem.comments || [],
-          deleted: cloudItem.deleted === true
+          likes: Math.max(0, c.likes || 0),
+          dislikes: Math.max(0, c.dislikes || 0),
+          userVoted: myVotes[i] || null,
+          comments: Array.isArray(c.comments) ? c.comments : [],
+          deleted: hidden,
+          isNew: i > DERNIER_ANCIEN
         });
+      }
+      return out;
+    }
+
+    async function loadCloud() {
+      try {
+        const snap = await withTimeout(getDocs(collection(db, COL)), 12000);
+        const out = {};
+        snap.forEach(d => { const x = d.data(); if (x && typeof x.id === 'number' && x.id > 0) out[x.id] = x; });
+        return out;
+      } catch (e) {
+        console.log("Cloud indisponible, le site utilise les données du code :", e);
+        return null;
       }
     }
 
+    // Une "fiche" par article ; les photos d'un même groupe (coloris) sont regroupées.
+    function catalogue() {
+      const out = [], seen = new Set();
+      products.forEach(p => {
+        if (missing.has(p.id)) return;
+        const gi = groupOf[p.id];
+        if (gi === undefined) {
+          if (!p.deleted) out.push({ eid: p.id, head: p, variants: [p], group: null });
+          return;
+        }
+        if (seen.has(gi)) return;
+        seen.add(gi);
+        const g = GROUPES[gi];
+        const vs = g.ids.map(id => products[id - 1]).filter(v => v && !v.deleted && !missing.has(v.id));
+        if (vs.length) out.push({ eid: products[g.ids[0] - 1].id, head: products[g.ids[0] - 1], variants: vs, group: g });
+      });
+      out.forEach(e => { e.cat = isGeneric(e.head.name) ? 'autres' : categoryOf(e.head.name); });
+      return out;
+    }
+    const catOf = e => e.cat;
+    const maxId = e => Math.max(...e.variants.map(v => v.id));
+    const entryById = eid => catalogue().find(e => e.eid === eid);
+    function variantOf(e) { const id = selVar[e.eid]; return e.variants.find(v => v.id === id) || e.variants[0]; }
+    function labelFor(e, v) {
+      const g = e.group; if (!g) return '';
+      const i = g.ids.indexOf(v.id);
+      return (g.couleurs && g.couleurs[i]) || ('Coloris ' + (i + 1));
+    }
+
+    /* ---------- affichage de la collection ---------- */
+    function applyFilters(list) {
+      const q = norm(state.q).trim().replace(/^#/, '');
+      let out = list.filter(e => (state.cat === 'all' || e.cat === state.cat) && (!q || norm(e.head.name).includes(q) || String(e.head.id) === q));
+      const pr = e => e.head.price > 0 ? e.head.price : null;
+      if (state.sort === 'asc') out.sort((a, b) => ((pr(a) ?? 1e9) - (pr(b) ?? 1e9)) || (maxId(b) - maxId(a)));
+      else if (state.sort === 'desc') out.sort((a, b) => ((pr(b) ?? -1) - (pr(a) ?? -1)) || (maxId(b) - maxId(a)));
+      else out.sort((a, b) => maxId(b) - maxId(a));
+      return out;
+    }
+
+    function renderChips(all) {
+      const counts = { all: all.length };
+      all.forEach(e => { counts[e.cat] = (counts[e.cat] || 0) + 1; });
+      $('chips').innerHTML = CATS.filter(([k]) => k === 'all' || counts[k]).map(([k, label]) =>
+        `<button class="u-b u-chip${state.cat === k ? ' is-on' : ''}" aria-pressed="${state.cat === k}" onclick="setCat('${k}')">${label}<small>${counts[k] || 0}</small></button>`).join('');
+    }
+
+    function renderTiles(all) {
+      ['chaussures', 'maillots', 'casquettes'].forEach(c => {
+        const list = all.filter(e => e.cat === c);
+        const pick = list.find(e => e.variants.some(v => v.id === HERO_PICKS[c])) || list[0];
+        const n = $('tileN-' + c), img = $('tileImg-' + c);
+        if (n) n.textContent = list.length + ' article' + (list.length > 1 ? 's' : '');
+        if (img && pick) {
+          const v = pick.variants.find(x => x.id === HERO_PICKS[c]) || pick.variants[0];
+          if (img.getAttribute('src') !== v.image) { img.style.display = ''; img.src = v.image; }
+        }
+      });
+    }
+
+    function cardHtml(e) {
+      const h = e.head, v = variantOf(e), name = escapeHtml(h.name), many = e.variants.length > 1;
+      const isNew = e.variants.some(x => x.isNew);
+      const sw = many ? `<div class="pc-sw">${e.variants.map(x => `<button class="pc-swb${x.id === v.id ? ' on' : ''}" onclick="pickVariant(${e.eid},${x.id})" aria-label="${escapeHtml(labelFor(e, x))}"><img src="${x.image}" alt="" loading="lazy" onerror="imgFail(this,${x.id})"></button>`).join('')}</div>` : '';
+      return `
+      <article class="pc" id="pc-${e.eid}">
+        <div class="pc-photo">
+          <button class="pc-open" onclick="openProduct(${e.eid})" aria-label="Voir ${name}"><img src="${v.image}" alt="${name}" loading="lazy" decoding="async" onerror="imgFail(this,${v.id})"></button>
+          ${isNew ? '<span class="pc-tag">Nouveau</span>' : ''}
+          ${many ? `<span class="pc-tag2">${e.variants.length} coloris</span>` : ''}
+          ${sw}
+        </div>
+        <div class="pc-body">
+          <h3 class="pc-name">${name}</h3>
+          <div class="pc-row">
+            <span class="pc-price${h.price > 0 ? '' : ' ask'}">${priceTxt(h.price)}</span>
+            ${h.likes > 0 ? `<span class="pc-likes"><i class="fa-regular fa-thumbs-up"></i> ${h.likes}</span>` : ''}
+          </div>
+          <div class="pc-actions">
+            <button class="u-b btn-wa" onclick="quickOrderWhatsApp(${e.eid})"><i class="fa-brands fa-whatsapp" style="font-size:17px"></i>${h.price > 0 ? 'Commander' : 'Demander'}</button>
+            <button class="u-b btn-ic" onclick="addToCart(${e.eid})" aria-label="Ajouter au panier"><i class="fa-solid fa-cart-plus"></i></button>
+          </div>
+        </div>
+      </article>`;
+    }
+
+    function emptyHtml() {
+      const wa = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent("Bonjour Urban Man Shop 2243, je cherche : " + state.q)}`;
+      return `<div class="u-empty"><b>Aucun article trouvé</b>Essaie un autre mot, ou demande-nous directement sur WhatsApp.
+        <div class="u-cta"><button class="u-b u-btn-glass" onclick="resetFilters()">Tout afficher</button><a class="u-b u-btn-wa" href="${wa}" target="_blank" rel="noopener">Demander sur WhatsApp</a></div></div>`;
+    }
+
+    function renderProducts() {
+      const all = catalogue();
+      renderChips(all); renderTiles(all);
+      const list = applyFilters(all);
+      $('resultCount').textContent = `${list.length} article${list.length > 1 ? 's' : ''}` + (list.length !== all.length ? ` sur ${all.length}` : '');
+      $('productsGrid').innerHTML = list.length ? list.map(cardHtml).join('') : emptyHtml();
+    }
+    let rT;
+    function scheduleRender() { clearTimeout(rT); rT = setTimeout(() => { renderProducts(); refreshOpenProduct(); }, 60); }
+
+    window.imgFail = function(img, id) {
+      if (id > DERNIER_ANCIEN) { if (!missing.has(id)) { missing.add(id); scheduleRender(); } return; }
+      img.onerror = null; img.src = PLACEHOLDER;
+    };
+    window.setCat = function(c) { state.cat = c; renderProducts(); };
+    window.goCat = function(c) { state.cat = c; renderProducts(); $('collection').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+    window.resetFilters = function() { state.q = ''; state.cat = 'all'; $('searchInput').value = ''; renderProducts(); };
+    window.focusSearch = function() { $('collection').scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => $('searchInput').focus({ preventScroll: true }), 350); };
+    window.pickVariant = function(eid, vid) {
+      selVar[eid] = vid;
+      const e = entryById(eid), card = $('pc-' + eid); if (!e || !card) return;
+      const v = variantOf(e);
+      const img = card.querySelector('.pc-open img'); if (img) { img.src = v.image; img.onerror = () => imgFail(img, v.id); }
+      card.querySelectorAll('.pc-swb').forEach((b, i) => b.classList.toggle('on', e.variants[i] && e.variants[i].id === v.id));
+    };
+
+    /* ---------- fiche article ---------- */
+    function relatedHtml(e) {
+      const list = catalogue().filter(x => x.eid !== e.eid && x.cat === e.cat && e.cat !== 'autres').sort((a, b) => maxId(b) - maxId(a)).slice(0, 8);
+      if (!list.length) return '';
+      return `<div class="pm-sec"><span class="pm-lbl">Dans la même catégorie</span><div class="pm-rel">${list.map(x => {
+        const v = x.variants[0];
+        return `<button class="pm-rc" onclick="openProduct(${x.eid}, true)"><img src="${v.image}" alt="" loading="lazy" onerror="imgFail(this,${v.id})"><span>${escapeHtml(x.head.name)}</span><b>${x.head.price > 0 ? x.head.price + ' $' : ''}</b></button>`;
+      }).join('')}</div></div>`;
+    }
+
+    function pmRender(e) {
+      const h = e.head, v = variantOf(e), name = escapeHtml(h.name), sizes = SIZES[e.cat];
+      const isNew = e.variants.some(x => x.isNew);
+      const thumbs = e.variants.length > 1 ? `<div><span class="pm-lbl">Coloris : <b id="pmColLbl">${escapeHtml(labelFor(e, v))}</b></span><div class="pm-thumbs">${e.variants.map(x => `<button class="u-b pm-th${x.id === v.id ? ' on' : ''}" onclick="pmPick(${e.eid},${x.id})" aria-label="${escapeHtml(labelFor(e, x))}"><img src="${x.image}" alt="" onerror="imgFail(this,${x.id})"></button>`).join('')}</div></div>` : '';
+      const szHtml = sizes ? `<div><span class="pm-lbl">Ta taille <span style="font-weight:600">(facultatif, on te confirme la disponibilité)</span></span><div class="pm-sizes">${sizes.map(s => `<button class="u-b pm-sz${selSize[e.eid] === s ? ' on' : ''}" onclick="pmSize(${e.eid},'${s}')">${s}</button>`).join('')}</div></div>` : '';
+      const reviews = h.comments.length ? h.comments.map(c => `<div class="rv"><b>${escapeHtml(c.user)}</b>${escapeHtml(c.text)}</div>`).join('') : '<p class="rv-none">Aucun avis pour le moment.</p>';
+      $('pmBody').innerHTML = `
+        <div class="pm">
+          <div class="pm-img"><img id="pmImg" src="${v.image}" alt="${name}" onclick="openImageModal(this.src)" onerror="imgFail(this,${v.id})"><button class="u-b pm-zoom" onclick="openImageModal($('pmImg').src)"><i class="fa-solid fa-expand"></i>Agrandir</button></div>
+          <div class="pm-info">
+            <div class="pm-meta"><span class="pm-cat">${CAT_LABEL[e.cat]}</span>${isNew ? '<span class="pm-new">Nouveau</span>' : ''}</div>
+            <h2 class="pm-name" id="pmName">${name}</h2>
+            <div class="pm-price${h.price > 0 ? '' : ' ask'}">${priceTxt(h.price)}</div>
+            ${thumbs}${szHtml}
+            <div class="pm-sec">
+              <div class="pm-votes">
+                <button class="u-b${h.userVoted === 'like' ? ' on-like' : ''}" onclick="vote(${h.id},'like')"><i class="fa-${h.userVoted === 'like' ? 'solid' : 'regular'} fa-thumbs-up"></i>${h.likes}</button>
+                <button class="u-b${h.userVoted === 'dislike' ? ' on-dislike' : ''}" onclick="vote(${h.id},'dislike')"><i class="fa-${h.userVoted === 'dislike' ? 'solid' : 'regular'} fa-thumbs-down"></i>${h.dislikes}</button>
+              </div>
+              <span class="pm-lbl" style="margin-top:12px">Avis (${h.comments.length})</span>
+              <div class="rv-list">${reviews}</div>
+              <div class="rv-form">
+                <input type="text" id="commentUser-${h.id}" placeholder="Ton nom" maxlength="40" autocomplete="off">
+                <div class="row"><input type="text" id="commentText-${h.id}" placeholder="Ton avis…" maxlength="300" autocomplete="off"><button class="u-b" onclick="addComment(${h.id})">Publier</button></div>
+              </div>
+            </div>
+            ${relatedHtml(e)}
+          </div>
+        </div>`;
+      $('pmFoot').innerHTML = `
+        <button class="u-b btn-ic" onclick="shareProduct(${e.eid})" aria-label="Partager cet article"><i class="fa-solid fa-share-nodes"></i></button>
+        <button class="u-b btn-ic" onclick="addToCart(${e.eid})" aria-label="Ajouter au panier"><i class="fa-solid fa-cart-plus"></i></button>
+        <button class="u-b btn-wa" onclick="quickOrderWhatsApp(${e.eid})"><i class="fa-brands fa-whatsapp" style="font-size:22px"></i>${h.price > 0 ? 'Commander sur WhatsApp' : 'Demander le prix'}</button>`;
+    }
+
+    window.openProduct = function(eid, fromPop) {
+      const e = entryById(eid); if (!e) return;
+      const wasOpen = !$('productModal').hidden;
+      openEid = eid; pmRender(e); track('view_item', { item_id: String(eid), item_name: e.head.name });
+      $('productModal').hidden = false; $('pmBody').scrollTop = 0; lock();
+      if (wasOpen) { try { history.replaceState({ pm: eid }, '', '#article-' + eid); } catch (x) {} }
+      else if (!fromPop) { try { history.pushState({ pm: eid }, '', '#article-' + eid); } catch (x) {} }
+    };
+    window.closeProduct = function(fromPop) {
+      $('productModal').hidden = true; openEid = null; lock();
+      if (fromPop === true) return;
+      const s = history.state;
+      if (s && s.pm) { if (s.deep) { try { history.replaceState(null, '', location.pathname + location.search); } catch (x) {} } else history.back(); }
+    };
+    function refreshOpenProduct() {
+      if (openEid == null || $('productModal').hidden) return;
+      const e = entryById(openEid);
+      if (!e) { closeProduct(true); return; }
+      const st = $('pmBody').scrollTop; pmRender(e); $('pmBody').scrollTop = st;
+    }
+    window.pmPick = function(eid, vid) {
+      selVar[eid] = vid;
+      const e = entryById(eid); if (!e) return; const v = variantOf(e);
+      const img = $('pmImg'); if (img) img.src = v.image;
+      document.querySelectorAll('.pm-th').forEach((b, i) => b.classList.toggle('on', e.variants[i] && e.variants[i].id === v.id));
+      const l = $('pmColLbl'); if (l) l.textContent = labelFor(e, v);
+      pickVariant(eid, vid);
+    };
+    window.pmSize = function(eid, s) {
+      selSize[eid] = selSize[eid] === s ? null : s;
+      document.querySelectorAll('.pm-sz').forEach(b => b.classList.toggle('on', b.textContent === selSize[eid]));
+    };
+    window.shareProduct = async function(eid) {
+      const e = entryById(eid); if (!e) return;
+      const url = BASE + '#article-' + eid, text = `${e.head.name}${e.head.price > 0 ? ' : ' + e.head.price + ' $' : ''} chez Urban Man Shop 2243`;
+      if (navigator.share) {
+        try { await navigator.share({ title: e.head.name, text, url }); return; } catch (err) { if (err && err.name === 'AbortError') return; }
+      }
+      try { await navigator.clipboard.writeText(url); toast('Lien copié'); } catch (err) { prompt('Copie ce lien :', url); }
+    };
+
+    window.vote = async function(pid, type) {
+      const p = products[pid - 1]; if (!p) return;
+      const prev = p.userVoted; let dl = 0, dd = 0;
+      if (prev === type) { if (type === 'like') dl = -1; else dd = -1; p.userVoted = null; }
+      else { if (prev === 'like') dl--; if (prev === 'dislike') dd--; if (type === 'like') dl++; else dd++; p.userVoted = type; }
+      p.likes = Math.max(0, p.likes + dl); p.dislikes = Math.max(0, p.dislikes + dd);
+      if (p.userVoted) myVotes[pid] = p.userVoted; else delete myVotes[pid];
+      ls.set('um_votes', myVotes);
+      renderProducts(); refreshOpenProduct();
+      try {
+        const data = { id: pid }; if (dl) data.likes = increment(dl); if (dd) data.dislikes = increment(dd);
+        await setDoc(doc(db, COL, `item_${pid}`), data, { merge: true });
+      } catch (e) { console.log("Erreur vote:", e); }
+    };
+    window.addComment = async function(pid) {
+      const uf = $('commentUser-' + pid), tf = $('commentText-' + pid); if (!tf) return;
+      const user = (uf.value.trim() || 'Client').slice(0, 40), text = tf.value.trim().slice(0, 300);
+      if (!text) return;
+      const p = products[pid - 1]; if (!p) return;
+      p.comments.push({ user, text });
+      refreshOpenProduct();
+      try { await setDoc(doc(db, COL, `item_${pid}`), { id: pid, comments: arrayUnion({ user, text }) }, { merge: true }); }
+      catch (e) { console.log("Erreur commentaire:", e); }
+    };
+
+    /* ---------- commandes WhatsApp ---------- */
+    function orderLine(it) {
+      let s = `• *${it.name}*${it.label ? ' (' + it.label + ')' : ''}${it.size ? ' - taille ' + it.size : ''}${it.qty > 1 ? ' x' + it.qty : ''} : ${it.price > 0 ? (it.price * it.qty) + ' $' : 'prix sur demande'}`;
+      s += `\n  Réf. #${it.id}\n  Photo : ${absUrl(it.image)}`;
+      return s;
+    }
+    function openWhatsApp(msg) { window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank'); }
+    function itemFor(e, qty) {
+      const v = variantOf(e);
+      return { eid: e.eid, id: v.id, name: e.head.name, label: labelFor(e, v), size: SIZES[e.cat] ? (selSize[e.eid] || '') : '', price: e.head.price, image: v.image, qty: qty || 1 };
+    }
+    window.quickOrderWhatsApp = function(eid) {
+      const e = entryById(eid); if (!e) return;
+      track('order_whatsapp', { item_id: String(e.eid), item_name: e.head.name, value: e.head.price });
+      openWhatsApp(`Bonjour Urban Man Shop 2243, je souhaite commander :\n\n${orderLine(itemFor(e))}\n\nMerci de me confirmer la disponibilité !`);
+    };
+    window.sendCartToWhatsApp = function() {
+      if (!cart.length) return;
+      const lines = cart.map(orderLine).join('\n\n'), t = cartTotal();
+      track('order_cart', { value: t, items: cartCount() });
+      openWhatsApp(`Bonjour Urban Man Shop 2243, voici ma commande :\n\n${lines}\n\n${t > 0 ? '*Total estimé :* ' + t + ' $' + (cartAsk() ? ' + articles sur demande' : '') + '\n' : ''}Merci de me confirmer la disponibilité !`);
+    };
+    window.participateTombola = function() {
+      openWhatsApp("Bonjour Urban Man Shop 2243, j'ai une question sur la Tombola.");
+    };
+
+    /* ---------- panier ---------- */
+    const cartCount = () => cart.reduce((a, i) => a + i.qty, 0);
+    const cartTotal = () => cart.reduce((a, i) => a + i.price * i.qty, 0);
+    const cartAsk = () => cart.some(i => !(i.price > 0));
+    const totalLabel = () => { const t = cartTotal(); return t > 0 ? t + ' $' + (cartAsk() ? ' + sur demande' : '') : 'Sur demande'; };
+    function saveCart() { ls.set('um_cart', cart); }
+    function refreshCartPrices() {
+      cart = cart.filter(it => products[it.id - 1] && !products[it.id - 1].deleted);
+      cart.forEach(it => { const h = products[(it.eid || it.id) - 1]; if (h) { it.name = h.name; it.price = h.price; } });
+      saveCart(); updateCartUI();
+    }
+    function updateCartUI() {
+      const n = cartCount(), tot = cartTotal();
+      const b = $('cartBadge'); b.textContent = n; b.hidden = n === 0;
+      $('cartBar').hidden = n === 0;
+      $('cbCount').textContent = n + (n > 1 ? ' articles' : ' article');
+      $('cbTotal').textContent = tot > 0 ? tot + ' $' : '';
+      $('cbTotal').style.marginRight = tot > 0 ? '10px' : '0';
+    }
+    window.addToCart = function(eid) {
+      const e = entryById(eid); if (!e) return;
+      const it = itemFor(e);
+      const ex = cart.find(c => c.id === it.id && (c.size || '') === (it.size || ''));
+      if (ex) ex.qty++; else cart.push(it);
+      saveCart(); updateCartUI(); toast('Ajouté au panier'); track('add_to_cart', { item_id: String(e.eid), value: e.head.price });
+    };
+    window.openCart = function() {
+      const list = $('cartItemsList');
+      if (!cart.length) {
+        list.innerHTML = `<div class="u-empty" style="padding:36px 12px"><b>Ton panier est vide</b>Choisis un article, puis commande en un message sur WhatsApp.<div class="u-cta"><button class="u-b u-btn-glass" onclick="closeCart();goCat('all')">Voir la collection</button></div></div>`;
+      } else {
+        list.innerHTML = cart.map((it, i) => `
+          <div class="ci">
+            <img src="${it.image}" alt="" onerror="this.src=UM_PH">
+            <div class="ci-t"><b>${escapeHtml(it.name)}</b>${(it.label || it.size) ? `<small>${[it.label, it.size ? 'taille ' + it.size : ''].filter(Boolean).map(escapeHtml).join(' · ')}</small>` : ''}<em>${it.price > 0 ? it.price + ' $' : 'Sur demande'}</em></div>
+            <div class="ci-q"><button class="u-b" onclick="changeQty(${i},-1)" aria-label="Retirer un">−</button><span>${it.qty}</span><button class="u-b" onclick="changeQty(${i},1)" aria-label="Ajouter un">+</button></div>
+          </div>`).join('');
+      }
+      $('cartTotalPrice').textContent = totalLabel();
+      $('cartModal').hidden = false; lock();
+    };
+    window.closeCart = function() { $('cartModal').hidden = true; lock(); };
+    window.changeQty = function(i, d) {
+      const it = cart[i]; if (!it) return;
+      it.qty += d; if (it.qty <= 0) cart.splice(i, 1);
+      saveCart(); updateCartUI(); openCart();
+    };
+
+    /* ---------- tombola, zoom, Mobile Money ---------- */
+    window.openTombolaModal = function() { $('tombolaModal').hidden = false; lock(); track('tombola_open'); };
+    window.closeTombolaModal = function() { $('tombolaModal').hidden = true; lock(); };
+    window.openImageModal = function(src) {
+      const img = $('zoomedImage'); img.src = src; img.classList.remove('zoomed'); $('imageModal').classList.remove('hidden');
+    };
+    window.closeImageModal = function() { $('imageModal').classList.add('hidden'); };
+    window.toggleZoom = function() { $('zoomedImage').classList.toggle('zoomed'); };
+    window.openMobileMoneyModal = function() { $('mobileMoneyModal').classList.remove('hidden'); };
+    window.closeMobileMoneyModal = function() { $('mobileMoneyModal').classList.add('hidden'); };
+    window.copyToClipboard = function(text) {
+      const done = () => toast('Copié : ' + text);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => prompt('Copie ce numéro :', text));
+      else prompt('Copie ce numéro :', text);
+    };
+    window.confirmMobileMoneyWhatsApp = function() {
+      openWhatsApp("Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture.");
+    };
+
+    /* ---------- Espace Créateur ---------- */
+    let creatorCount = 0;
+    function setDiag(t) { const d = $('creatorDiag'); if (d) d.textContent = t; }
+    function updateDelBar() {
+      const bar = $('creatorDelBar'); if (!bar) return;
+      const ids = products.filter(p => p.deleted).map(p => p.id);
+      $('creatorDelCount').textContent = ids.length ? `${ids.length} article(s) supprimé(s) : ${ids.map(i => '#' + i).join(' ')}` : 'Aucun article supprimé.';
+      $('creatorDelWarn').classList.toggle('hidden', !cloudRefused);
+    }
     window.promptCreatorAccess = function() {
       const code = prompt("Mot de passe Espace Créateur :");
-      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") {
-        openCreatorModal();
-      } else if (code !== null) {
-        alert("Mot de passe incorrect.");
-      }
-    }
-
+      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") openCreatorModal();
+      else if (code !== null) alert("Mot de passe incorrect.");
+    };
+    window.rowImgFail = function(img, id) {
+      if (id > DERNIER_ANCIEN) { const r = img.closest('[data-row]'); if (r) r.remove(); return; }
+      img.onerror = null; img.src = PLACEHOLDER;
+    };
     function openCreatorModal() {
-      const container = document.getElementById('creatorProductsList');
+      const container = $('creatorProductsList');
       container.innerHTML = '';
-
       products.forEach(p => {
+        const gi = groupOf[p.id], member = gi !== undefined && GROUPES[gi].ids[0] !== p.id;
         const row = document.createElement('div');
         row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
+        row.id = `creator-row-${p.id}`; row.setAttribute('data-row', '1');
+        const inCode = SUPPRIMES.includes(p.id);
         row.innerHTML = `
           <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="this.src='https://via.placeholder.com/40'">
+            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="rowImgFail(this,${p.id})">
             <span class="text-xs font-mono text-neutral-400">#${p.id}</span>
           </div>
-
           <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
-            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
             <div class="flex items-center space-x-1 w-full sm:w-32">
-              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
+              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
               <span class="text-xs font-bold text-amber-400">$</span>
             </div>
           </div>
-          <button data-del onclick="setProductDeleted(${p.id}, ${!p.deleted})" class="text-xs bg-red-600/80 hover:bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg w-full sm:w-auto">${p.deleted ? 'Restaurer' : 'Supprimer'}</button>
-        `;
-        row.id = `creator-row-${p.id}`;
+          ${member ? `<span class="text-[10px] text-neutral-500 w-full sm:w-auto">Coloris de #${GROUPES[gi].ids[0]} (même nom et prix)</span>` : ''}
+          <button data-del ${inCode ? 'disabled' : ''} onclick="setProductDeleted(${p.id}, ${!p.deleted})" class="text-xs bg-red-600/80 hover:bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg w-full sm:w-auto">${inCode ? 'Supprimé (code)' : (p.deleted ? 'Restaurer' : 'Supprimer')}</button>`;
         if (p.deleted) row.classList.add('opacity-40');
         container.appendChild(row);
       });
-
-      document.getElementById('creatorModal').classList.remove('hidden');
+      $('creatorModal').classList.remove('hidden');
+      setDiag(''); updateDelBar();
     }
+    window.closeCreatorModal = function() { $('creatorModal').classList.add('hidden'); };
 
     window.setProductDeleted = async function(id, flag) {
-      const p = products.find(x => x.id === id);
-      if (!p) return;
+      const p = products[id - 1];
+      if (!p || SUPPRIMES.includes(id)) return;
       if (flag && !confirm(`Supprimer l'article #${id} (${p.name}) de la boutique ?`)) return;
-      try {
-        await setDoc(doc(db, "shop_products_clean", `item_${id}`), { id: id, deleted: flag }, { merge: true });
-        p.deleted = flag;
-        const row = document.getElementById(`creator-row-${id}`);
-        if (row) {
-          row.classList.toggle('opacity-40', flag);
-          const btn = row.querySelector('[data-del]');
-          if (btn) { btn.textContent = flag ? 'Restaurer' : 'Supprimer'; btn.setAttribute('onclick', `setProductDeleted(${id}, ${!flag})`); }
-        }
-        renderProducts();
-      } catch (e) {
-        alert("Erreur Cloud : " + e.message);
+      const loc = readLocalHidden(); loc[String(id)] = flag; writeLocalHidden(loc);     // effet immédiat, sans cloud
+      p.deleted = flag;
+      const row = $(`creator-row-${id}`);
+      if (row) {
+        row.classList.toggle('opacity-40', flag);
+        const btn = row.querySelector('[data-del]');
+        if (btn) { btn.textContent = flag ? 'Restaurer' : 'Supprimer'; btn.setAttribute('onclick', `setProductDeleted(${id}, ${!flag})`); }
       }
+      renderProducts(); refreshCartPrices(); refreshOpenProduct();
+      try {                                                                              // pour tous les visiteurs
+        await withTimeout(setDoc(doc(db, COL, `item_${id}`), { id, hidden: flag }, { merge: true }), 12000);
+        const l2 = readLocalHidden(); delete l2[String(id)]; writeLocalHidden(l2);
+      } catch (e) { cloudRefused = true; console.log(friendly(e)); setDiag(friendly(e)); }
+      updateDelBar();
     };
-
-    window.closeCreatorModal = function() {
-      document.getElementById('creatorModal').classList.add('hidden');
-    }
 
     window.saveCreatorDataToCloud = async function() {
+      const changed = [];
+      products.forEach(p => {
+        const ni = $(`creator-name-${p.id}`), pi = $(`creator-price-${p.id}`);
+        if (!ni || !pi || ni.disabled) return;
+        const name = ni.value.trim() || `Article #${p.id}`, price = parseFloat(pi.value) || 0;
+        if (name !== p.name || price !== p.price) changed.push({ p, name, price });
+      });
+      if (!changed.length) { setDiag('Aucun changement à enregistrer.'); alert('Aucun changement à enregistrer.'); return; }
+      const btn = $('creatorSaveBtn'), old = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Enregistrement…'; setDiag(`Envoi de ${changed.length} modification(s)…`);
       try {
-        for (const p of products) {
-          const nameInput = document.getElementById(`creator-name-${p.id}`);
-          const priceInput = document.getElementById(`creator-price-${p.id}`);
-          if (nameInput && priceInput) {
-            p.name = nameInput.value.trim() || `Marchandise #${p.id}`;
-            p.price = parseFloat(priceInput.value) || 0;
-          }
-          const prodRef = doc(db, "shop_products_clean", `item_${p.id}`);
-          await setDoc(prodRef, {
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            image: p.image,
-            likes: p.likes,
-            dislikes: p.dislikes,
-            userVoted: p.userVoted,
-            comments: p.comments,
-            deleted: !!p.deleted
-          });
-        }
-
-        renderProducts();
+        const batch = writeBatch(db);
+        changed.forEach(({ p, name, price }) => batch.set(doc(db, COL, `item_${p.id}`), { id: p.id, name, price, rev: 2 }, { merge: true }));
+        await withTimeout(batch.commit(), 15000);
+        changed.forEach(({ p, name, price }) => { p.name = name; p.price = price; });
+        cloudRefused = false;
+        renderProducts(); refreshCartPrices(); refreshOpenProduct();
+        setDiag(`${changed.length} modification(s) enregistrée(s).`);
         closeCreatorModal();
-        alert("Enregistré ! Les modifications sont désormais visibles sur tous les téléphones.");
+        toast('Enregistré pour tous les téléphones');
       } catch (e) {
-        alert("Erreur Cloud : " + e.message);
-      }
+        setDiag(friendly(e)); alert(friendly(e));
+      } finally { btn.disabled = false; btn.textContent = old; }
     };
 
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        const swCode = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => {
-            e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-          });
-        `;
-        const blob = new Blob([swCode], { type: 'text/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log('SW Fail:', err));
-      }
+    window.testFirebase = async function() {
+      setDiag('Test en cours…');
+      try { await withTimeout(getDocs(collection(db, COL)), 10000); }
+      catch (e) { setDiag('Lecture impossible : ' + friendly(e)); return; }
+      try {
+        await withTimeout(setDoc(doc(db, COL, '_diag'), { id: -1, ping: new Date().toISOString().slice(0, 19) }, { merge: true }), 10000);
+        cloudRefused = false; updateDelBar();
+        setDiag('Connexion OK : lecture et écriture fonctionnent.');
+      } catch (e) { setDiag('Écriture refusée : ' + friendly(e)); }
+    };
 
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('pwaInstallBanner').classList.remove('hidden');
-      });
+    window.copyForCode = function() {
+      const ids = products.filter(p => p.deleted).map(p => p.id);
+      const lines = products.map(p => {
+        const ni = $(`creator-name-${p.id}`), pi = $(`creator-price-${p.id}`);
+        const name = ni && !ni.disabled ? (ni.value.trim() || `Article #${p.id}`) : p.name;
+        const price = pi && !pi.disabled ? (parseFloat(pi.value) || 0) : p.price;
+        return (isGeneric(name) && !price) ? null : `      ${p.id}: { n: ${JSON.stringify(name)}, p: ${price} },`;
+      }).filter(Boolean);
+      const txt = `const SUPPRIMES = [${ids.join(', ')}];\nconst PRODUITS_PAR_DEFAUT = {\n${lines.join('\n')}\n    };`;
+      const fallback = () => prompt("Copie ce texte et envoie-le moi :", txt);
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Catalogue copié'), fallback); else fallback();
+    };
+
+    /* ---------- démarrage ---------- */
+    function openFromHash() {
+      const m = /^#article-(\d+)$/.exec(location.hash || ''); if (!m) return;
+      const eid = parseInt(m[1], 10);
+      if (!entryById(eid)) return;
+      try { history.replaceState({ pm: eid, deep: 1 }, '', location.hash); } catch (e) {}
+      openProduct(eid, true);
     }
+    window.addEventListener('popstate', ev => {
+      if (ev.state && ev.state.pm) openProduct(ev.state.pm, true); else if (!$('productModal').hidden) closeProduct(true);
+    });
+    document.addEventListener('keydown', ev => {
+      if (ev.key !== 'Escape') return;
+      if (!$('imageModal').classList.contains('hidden')) closeImageModal();
+      else if (!$('productModal').hidden) closeProduct();
+      else if (!$('cartModal').hidden) closeCart();
+      else if (!$('tombolaModal').hidden) closeTombolaModal();
+      else if (!$('mobileMoneyModal').classList.contains('hidden')) closeMobileMoneyModal();
+      else if (!$('creatorModal').classList.contains('hidden')) closeCreatorModal();
+    });
 
     window.installPwa = function() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
-          deferredPrompt = null;
-          document.getElementById('pwaInstallBanner').classList.add('hidden');
-        });
-      }
-    }
-
-    window.openImageModal = function(imageSrc) {
-      const modal = document.getElementById('imageModal');
-      const img = document.getElementById('zoomedImage');
-      img.src = imageSrc;
-      img.classList.remove('zoomed');
-      modal.classList.remove('hidden');
-    }
-
-    window.closeImageModal = function() {
-      document.getElementById('imageModal').classList.add('hidden');
-    }
-
-    window.toggleZoom = function() {
-      document.getElementById('zoomedImage').classList.toggle('zoomed');
-    }
-
-    window.openTombolaModal = function() {
-      document.getElementById('tombolaModal').classList.remove('hidden');
-    }
-
-    window.closeTombolaModal = function() {
-      document.getElementById('tombolaModal').classList.add('hidden');
-    }
-
-    window.participateTombola = function() {
-      const msg = "Bonjour Urban Man Shop 2243, je participe à la Tombola de la boutique ! Voici ma participation.";
-      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-      closeTombolaModal();
-    }
-
-    function renderProducts(itemsToRender = products) {
-      const grid = document.getElementById('productsGrid');
-      grid.innerHTML = '';
-
-      itemsToRender = itemsToRender.filter(p => !p.deleted);
-      if (itemsToRender.length === 0) return;
-
-      itemsToRender.forEach(prod => {
-        const card = document.createElement('div');
-        card.className = "flex flex-col space-y-3 group p-3 rounded-2xl glass-card";
-
-        card.innerHTML = `
-          <div class="relative overflow-hidden rounded-xl bg-neutral-950 aspect-square flex items-center justify-center cursor-pointer" onclick="openImageModal('${prod.image}')" title="Agrandir">
-            <img src="${prod.image}" 
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300/111/444?text=Article+${prod.id}';"
-                 alt="${prod.name}" 
-                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-            
-            <span class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-neutral-300 border border-neutral-800">
-              <i class="fa-solid fa-expand mr-1"></i> Agrandir
-            </span>
-
-            <span class="absolute top-3 right-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-neutral-800">
-              ${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'}
-            </span>
-          </div>
-
-          <div class="space-y-2 flex-grow flex flex-col justify-between">
-            <div>
-              <h4 class="font-bold text-sm text-white leading-snug group-hover:text-amber-400 transition">${escapeHtml(prod.name)}</h4>
-              
-              <div class="flex items-center space-x-4 text-xs text-neutral-400 mt-2">
-                <button onclick="vote(${prod.id}, 'like')" class="flex items-center space-x-1 ${prod.userVoted === 'like' ? 'text-emerald-400 font-bold' : 'hover:text-white'}">
-                  <i class="fa-thumbs-up ${prod.userVoted === 'like' ? 'fa-solid' : 'fa-regular'}"></i>
-                  <span>${prod.likes}</span>
-                </button>
-                <button onclick="vote(${prod.id}, 'dislike')" class="flex items-center space-x-1 ${prod.userVoted === 'dislike' ? 'text-red-400 font-bold' : 'hover:text-white'}">
-                  <i class="fa-thumbs-down ${prod.userVoted === 'dislike' ? 'fa-solid' : 'fa-regular'}"></i>
-                  <span>${prod.dislikes}</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 pt-2">
-              <button onclick="quickOrderWhatsApp(${prod.id})" class="bg-white text-black font-extrabold text-xs py-2.5 rounded-xl hover:bg-neutral-200 transition flex items-center justify-center space-x-1 shadow">
-                <i class="fa-brands fa-whatsapp text-sm"></i>
-                <span>Commander</span>
-              </button>
-              <button onclick="addToCart(${prod.id})" class="bg-neutral-900/80 border border-neutral-700/60 text-white font-semibold text-xs py-2.5 rounded-xl hover:bg-neutral-800 transition flex items-center justify-center space-x-1">
-                <i class="fa-solid fa-cart-plus text-xs"></i>
-                <span>Panier</span>
-              </button>
-            </div>
-
-            <div class="pt-1 border-t border-neutral-800/60">
-              <details class="text-[11px] text-neutral-400">
-                <summary class="cursor-pointer hover:text-white flex items-center justify-between py-1">
-                  <span><i class="fa-regular fa-comments mr-1"></i> Avis (${prod.comments.length})</span>
-                  <i class="fa-solid fa-chevron-down text-[9px]"></i>
-                </summary>
-                
-                <div class="mt-2 space-y-2 pt-1">
-                  <div class="space-y-1.5 max-h-28 overflow-y-auto">
-                    ${prod.comments.length === 0 ? '<p class="text-[10px] text-neutral-600 italic">Aucun avis.</p>' : ''}
-                    ${prod.comments.map(c => `
-                      <div class="bg-neutral-900/90 p-2 rounded-lg text-[10px] border border-neutral-800">
-                        <span class="font-bold text-amber-400">${escapeHtml(c.user)}:</span>
-                        <span class="text-neutral-300">${escapeHtml(c.text)}</span>
-                      </div>
-                    `).join('')}
-                  </div>
-
-                  <div class="flex flex-col space-y-1 pt-1">
-                    <input type="text" id="commentUser-${prod.id}" placeholder="Votre nom" class="bg-neutral-900 border border-neutral-800 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none">
-                    <div class="flex space-x-1">
-                      <input type="text" id="commentText-${prod.id}" placeholder="Votre commentaire..." class="bg-neutral-900 border border-neutral-800 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none flex-grow">
-                      <button onclick="addComment(${prod.id})" class="bg-neutral-800 hover:bg-neutral-700 text-white px-2.5 py-1 rounded-lg text-[10px]">
-                        Poster
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </details>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { deferredPrompt = null; $('pwaInstallBanner').hidden = true; $('footInstall').hidden = true; });
+    };
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW non actif :', err && err.message));
+      window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault(); deferredPrompt = e;
+        $('pwaInstallBanner').hidden = false; $('footInstall').hidden = false;
       });
     }
 
-    window.vote = async function(productId, type) {
-      const prod = products.find(p => p.id === productId);
-      if (!prod) return;
-
-      if (prod.userVoted === type) {
-        if (type === 'like') prod.likes--;
-        if (type === 'dislike') prod.dislikes--;
-        prod.userVoted = null;
-      } else {
-        if (prod.userVoted === 'like') prod.likes--;
-        if (prod.userVoted === 'dislike') prod.dislikes--;
-        if (type === 'like') prod.likes++;
-        if (type === 'dislike') prod.dislikes++;
-        prod.userVoted = type;
-      }
-
-      try {
-        const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
-        await setDoc(prodRef, { id: prod.id, likes: prod.likes, dislikes: prod.dislikes, userVoted: prod.userVoted }, { merge: true });
-      } catch (e) {
-        console.log("Erreur vote:", e);
-      }
-      renderProducts();
+    // Évite l'effet de clignotement : on vérifie d'abord quelles nouvelles photos existent vraiment (requête légère HEAD).
+    async function probeNewPhotos() {
+      const ids = []; for (let i = DERNIER_ANCIEN + 1; i <= TOTAL_IMAGES; i++) ids.push(i);
+      const one = id => fetch(`./${id}.png`, { method: 'HEAD' }).then(r => { if (r.status === 404) missing.add(id); }).catch(() => {});
+      await Promise.race([Promise.all(ids.map(one)), new Promise(r => setTimeout(r, 1500))]);
     }
 
-    window.addComment = async function(productId) {
-      const userField = document.getElementById(`commentUser-${productId}`);
-      const textField = document.getElementById(`commentText-${productId}`);
-      const user = userField.value.trim() || "Client";
-      const text = textField.value.trim();
-      if (!text) return;
-
-      const prod = products.find(p => p.id === productId);
-      if (prod) {
-        prod.comments.push({ user, text });
-        try {
-          const prodRef = doc(db, "shop_products_clean", `item_${prod.id}`);
-          await setDoc(prodRef, { id: prod.id, comments: arrayUnion({ user, text }) }, { merge: true });
-        } catch (e) {
-          console.log("Erreur commentaire:", e);
-        }
-        renderProducts();
-      }
-    }
-
-    window.addToCart = function(productId) {
-      const prod = products.find(p => p.id === productId);
-      if (!prod) return;
-
-      const existing = cart.find(item => item.id === productId);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({ ...prod, qty: 1 });
-      }
-      updateCartBadge();
-      openCart();
-    }
-
-    function updateCartBadge() {
-      const badge = document.getElementById('cartBadge');
-      const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-      if (totalItems > 0) {
-        badge.textContent = totalItems;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
-
-    window.openCart = function() {
-      const list = document.getElementById('cartItemsList');
-      list.innerHTML = '';
-      let total = 0;
-
-      if (cart.length === 0) {
-        list.innerHTML = '<p class="text-center text-neutral-500 text-xs py-10">Votre panier est vide.</p>';
-      } else {
-        cart.forEach(item => {
-          total += item.price * item.qty;
-          const row = document.createElement('div');
-          row.className = "flex items-center justify-between bg-neutral-900/80 p-3 rounded-xl border border-neutral-800";
-          row.innerHTML = `
-            <div class="flex items-center space-x-3">
-              <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg bg-black" onerror="this.src='https://via.placeholder.com/50'">
-              <div>
-                <h5 class="text-xs font-bold text-white">${escapeHtml(item.name)}</h5>
-                <p class="text-xs text-amber-400 font-semibold">${item.price} $ x ${item.qty}</p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold">-</button>
-              <span class="text-xs font-bold">${item.qty}</span>
-              <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-neutral-800 rounded-lg text-xs font-bold">+</button>
-            </div>
-          `;
-          list.appendChild(row);
-        });
-      }
-
-      document.getElementById('cartTotalPrice').textContent = total + ' $';
-      document.getElementById('cartModal').classList.remove('hidden');
-    }
-
-    window.closeCart = function() {
-      document.getElementById('cartModal').classList.add('hidden');
-    }
-
-    window.changeQty = function(productId, delta) {
-      const item = cart.find(i => i.id === productId);
-      if (!item) return;
-      item.qty += delta;
-      if (item.qty <= 0) cart = cart.filter(i => i.id !== productId);
-      updateCartBadge();
-      openCart();
-    }
-
-    window.quickOrderWhatsApp = function(productId) {
-      const prod = products.find(p => p.id === productId);
-      if (!prod) return;
-      
-      const message = `Bonjour Urban Man Shop 2243, je souhaite commander :\n\n- *${prod.name}* (${prod.price > 0 ? prod.price + ' $' : 'Sur Demande'})\nRéférence article #${prod.id}\nLien photo: ${prod.image}`;
-      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    }
-
-    window.sendCartToWhatsApp = function() {
-      if (cart.length === 0) return;
-      let message = "Bonjour Urban Man Shop 2243, voici ma commande :\n\n";
-      let total = 0;
-      cart.forEach(item => {
-        const subtotal = item.price * item.qty;
-        total += subtotal;
-        message += `• *${item.name}* (x${item.qty}) - ${subtotal > 0 ? subtotal + ' $' : 'Sur demande'}\n`;
+    window.addEventListener('DOMContentLoaded', async () => {
+      $('searchInput').addEventListener('input', ev => { state.q = ev.target.value; renderProducts(); });
+      $('sortSel').addEventListener('change', ev => { state.sort = ev.target.value; renderProducts(); });
+      const cloudP = loadCloud();                       // lancé tout de suite, en parallèle
+      await probeNewPhotos();
+      // 1) affichage immédiat avec les données du code (+ dernier état connu du cloud)
+      products = buildProducts(ls.get('um_cloud', {}));
+      refreshCartPrices(); renderProducts(); openFromHash();
+      registerServiceWorker(); initAnalytics();
+      // 2) mise à jour en arrière-plan avec Firebase (le site ne bloque jamais dessus)
+      cloudP.then(cloud => {
+        if (!cloud) return;
+        const slim = {};
+        Object.keys(cloud).forEach(k => { const c = cloud[k]; slim[k] = { id: c.id, name: c.name, price: c.price, rev: c.rev, hidden: c.hidden, likes: c.likes, dislikes: c.dislikes, comments: c.comments }; });
+        ls.set('um_cloud', slim);
+        products = buildProducts(cloud);
+        refreshCartPrices(); renderProducts(); refreshOpenProduct();
       });
-      message += `\n*Total Estimé:* ${total} $\nMerci de me confirmer la disponibilité !`;
-      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    }
-
-    window.openMobileMoneyModal = function() {
-      document.getElementById('mobileMoneyModal').classList.remove('hidden');
-    }
-
-    window.closeMobileMoneyModal = function() {
-      document.getElementById('mobileMoneyModal').classList.add('hidden');
-    }
-
-    window.copyToClipboard = function(text) {
-      navigator.clipboard.writeText(text);
-      alert("Copié : " + text);
-    }
-
-    window.confirmMobileMoneyWhatsApp = function() {
-      const message = "Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture.";
-      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    }
-
-    window.toggleSearch = function() {
-      const container = document.getElementById('searchContainer');
-      container.classList.toggle('hidden');
-      if (!container.classList.contains('hidden')) document.getElementById('searchInput').focus();
-    }
-
-    window.filterProducts = function() {
-      const query = document.getElementById('searchInput').value.toLowerCase().trim();
-      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
-      renderProducts(filtered);
-    }
-
-    function escapeHtml(text) {
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
+    });
   </script>
 </body>
 </html>
