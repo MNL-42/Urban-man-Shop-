@@ -1493,7 +1493,8 @@
       const fallback = () => prompt("Copie ce texte et envoie-le moi :", txt);
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Catalogue copié'), fallback); else fallback();
     };
-/* ---------- démarrage ---------- */
+
+    /* ---------- démarrage ---------- */
     function openFromHash() {
       const m = /^#article-(\d+)$/.exec(location.hash || ''); if (!m) return;
       const eid = parseInt(m[1], 10);
