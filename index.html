@@ -214,12 +214,12 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 10px 26px -8px rgba(16,185,129,.55) !important;
     }
     button.bg-emerald-600:hover { background-color: rgba(16,185,129,.42) !important; }
-    button[class*="from-amber-500"] {
+    button[class*="from-cyan-500"] {
       background-image: none !important; background-color: rgba(var(--lg-acc),.34) !important; color: #fff !important;
       border: 1px solid rgba(var(--lg-acc),.6);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 10px 26px -8px rgba(var(--lg-acc),.6) !important;
     }
-    button[class*="from-amber-500"]:hover { background-color: rgba(var(--lg-acc),.46) !important; }
+    button[class*="from-cyan-500"]:hover { background-color: rgba(var(--lg-acc),.46) !important; }
     .floating-tombola {
       background-image: none !important; background-color: rgba(var(--lg-acc),.38) !important; color: #fff !important;
       -webkit-backdrop-filter: blur(10px) saturate(170%); backdrop-filter: blur(10px) saturate(170%);
@@ -465,6 +465,71 @@
     .u-legal .u-b { color: #55555c; font-family: ui-monospace, monospace; padding: 4px 8px; }
 
     @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } .u-sheet, .u-drawer { animation: none; } }
+
+    /* ============ FINITIONS : plus de verre, bouton WhatsApp discret (couleurs du site conservées) ============ */
+    :root { --emerald: 16,185,129; --cy: 34,211,238; --glass-fill: linear-gradient(150deg, rgba(255,255,255,.11), rgba(255,255,255,.035)); --glass-edge: rgba(255,255,255,.15); }
+    ::selection { background: rgba(var(--cy), .45); color: #fff; }
+
+    /* bouton WhatsApp : plus petit, en verre teinté émeraude (plus de vert fluo) */
+    .u-btn-wa, .btn-wa {
+      background: linear-gradient(180deg, rgba(var(--emerald), .50), rgba(var(--emerald), .22));
+      border: 1px solid rgba(110, 231, 183, .40); color: #EAFFF7; font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 8px 20px -10px rgba(var(--emerald), .6);
+      -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4);
+    }
+    .u-btn-wa:hover, .btn-wa:hover { background: linear-gradient(180deg, rgba(var(--emerald), .62), rgba(var(--emerald), .30)); }
+    .u-btn-wa { height: 44px; padding: 0 18px; border-radius: 13px; font-size: 13.5px; }
+    .u-btn-wa i { font-size: 17px !important; }
+    .btn-wa { height: 38px; border-radius: 11px; font-size: 12.5px; }
+    .btn-ic { height: 38px; background: var(--glass-fill); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 rgba(255,255,255,.25); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .pc-actions { grid-template-columns: 1fr 40px; gap: 7px; }
+    .u-foot .btn-wa, .u-df .btn-wa { height: 46px; font-size: 14px; border-radius: 13px; }
+    .u-foot .btn-ic { width: 46px; height: 46px; border-radius: 13px; }
+    .u-fab { width: 46px; height: 46px; font-size: 19px; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+    .u-fab.wa { background: linear-gradient(180deg, rgba(var(--emerald), .55), rgba(var(--emerald), .26)); border: 1px solid rgba(110,231,183,.45); color: #EAFFF7; font-size: 23px; box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 24px -8px rgba(var(--emerald), .6); }
+    .u-fab.tb { font-size: 18px; }
+    .u-fab-lbl { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); background: rgba(6,6,22,.55); }
+
+    /* plus de transparence */
+    .u-ic, .u-chip, .u-search, .u-sort, .u-x, .pm-cat, .pm-sz, .u-pay span {
+      background: var(--glass-fill); border-color: var(--glass-edge);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
+      -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3);
+    }
+    .u-chip.is-on, .pm-sz.on { background: linear-gradient(180deg, rgba(var(--cy), .42), rgba(var(--cy), .18)); border-color: rgba(var(--cy), .75); color: #F1FEFF; box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 0 20px -4px rgba(var(--cy), .55); }
+    .u-chip.is-on small { color: rgba(241,254,255,.75); }
+    .u-chips { background: linear-gradient(180deg, rgba(6,6,22,.78), rgba(6,6,22,.45)); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .u-trust div { background: var(--glass-fill); border-color: var(--glass-edge); box-shadow: inset 0 1px 0 rgba(255,255,255,.2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    .u-note { background: linear-gradient(90deg, rgba(var(--lg-acc), .28), rgba(var(--cy), .16)); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    .u-tile::after { background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(6,6,22,.55)); }
+    .u-tile span { left: 8px; right: 8px; bottom: 8px; padding: 7px 9px; border-radius: 13px; background: rgba(8,8,28,.38); border: 1px solid rgba(255,255,255,.2); box-shadow: inset 0 1px 0 rgba(255,255,255,.25); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); }
+    @media (max-width: 400px) { .u-tile span { left: 6px; right: 6px; bottom: 6px; padding: 6px 7px; } }
+
+    .pc { background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.03) 55%, rgba(var(--lg-acc), .07)); border-color: var(--glass-edge);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 16px 34px -20px rgba(0,0,0,.8); }
+    .pc-photo { background: linear-gradient(135deg, #0b0b1e, #16163a); }
+    .pc-body { border-top: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0)); }
+    .pc-price, .pm-price { text-shadow: 0 0 18px rgba(var(--cy), .35); }
+    .pc-tag, .pm-new { background: linear-gradient(180deg, rgba(var(--cy), .55), rgba(var(--cy), .28)); border: 1px solid rgba(var(--cy), .7); color: #F1FEFF; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    .pc-tag2, .pm-zoom { background: rgba(8,8,28,.42); border-color: rgba(255,255,255,.22); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .pc-swb { border-color: rgba(255,255,255,.7); box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+    .pc-swb.on, .pm-th.on { border-color: rgb(var(--cy)); box-shadow: 0 0 12px -2px rgba(var(--cy), .7); }
+
+    .u-cbar { background: linear-gradient(180deg, rgba(var(--cy), .55), rgba(var(--cy), .26)); border: 1px solid rgba(255,255,255,.35); color: #F1FEFF; box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 14px 30px -12px rgba(var(--cy), .6); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); }
+    .u-toast { background: rgba(14,14,40,.55); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); border-color: var(--glass-edge); }
+    .u-foot, .u-df { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+    .pm-img { background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(var(--lg-acc), .10)); }
+    .rv, .ci, .tb-facts div { background: var(--glass-fill); border-color: var(--glass-edge); box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
+    .u-badge { background: rgb(var(--cy)); color: #031318; border-color: rgba(6,6,22,.9); }
+    .u-btn-glass { background: var(--glass-fill); border: 1px solid rgba(255,255,255,.26); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+    .u-btn-glass { height: 44px; border-radius: 13px; font-size: 13.5px; }
+    * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent; }
+    @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+      .pc, .u-chip, .u-search, .u-sort, .u-trust div, .u-cbar, .u-toast { background-color: rgba(18,18,46,.88); }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .pc, .u-chip, .u-search, .u-sort, .u-trust div, .u-cbar, .u-toast, .u-foot, .u-df { -webkit-backdrop-filter: none; backdrop-filter: none; background-color: rgba(18,18,46,.92); }
+    }
   </style>
 </head>
 <body class="flex flex-col selection:bg-cyan-400 selection:text-black">
@@ -679,12 +744,12 @@
         </p>
 
         <div class="space-y-3">
-          <div class="p-3.5 bg-neutral-900/90 border border-amber-500/30 rounded-xl flex items-center justify-between">
+          <div class="p-3.5 bg-neutral-900/90 border border-cyan-500/30 rounded-xl flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 font-black flex items-center justify-center text-xs">M</div>
+              <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 font-black flex items-center justify-center text-xs">M</div>
               <div>
                 <h4 class="font-bold text-xs text-white">M-Pesa (Vodacom)</h4>
-                <p class="text-xs font-mono text-amber-400 font-bold">+243 81 86 58 932</p>
+                <p class="text-xs font-mono text-cyan-400 font-bold">+243 81 86 58 932</p>
               </div>
             </div>
             <button onclick="copyToClipboard('+243818658932')" class="text-xs bg-neutral-800 text-neutral-300 px-3 py-1.5 rounded-lg">Copier</button>
@@ -726,7 +791,7 @@
     <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
       <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
         <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-amber-400"></i> Espace Créateur
+          <i class="fa-solid fa-sliders mr-2 text-cyan-400"></i> Espace Créateur
         </h3>
         <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white" aria-label="Fermer">
           <i class="fa-solid fa-xmark text-xl"></i>
@@ -735,7 +800,7 @@
 
       <div id="creatorDelBar" class="px-4 py-3 border-b border-neutral-800 bg-black/70 text-xs space-y-2">
         <div id="creatorDelCount" class="text-neutral-300"></div>
-        <div id="creatorDelWarn" class="hidden text-amber-400">Firebase refuse l'écriture : l'article est masqué seulement sur ce téléphone. Appuie sur « Tester Firebase » pour voir pourquoi.</div>
+        <div id="creatorDelWarn" class="hidden text-cyan-400">Firebase refuse l'écriture : l'article est masqué seulement sur ce téléphone. Appuie sur « Tester Firebase » pour voir pourquoi.</div>
         <div id="creatorDiag" class="text-emerald-300 font-semibold"></div>
         <div class="flex flex-wrap gap-2">
           <button onclick="testFirebase()" class="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-3 py-1.5 rounded-lg">Tester Firebase</button>
@@ -747,7 +812,7 @@
 
       <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center gap-3">
         <span class="text-xs text-neutral-400">Change un nom ou un prix, puis enregistre. Seules les lignes modifiées sont envoyées.</span>
-        <button id="creatorSaveBtn" onclick="saveCreatorDataToCloud()" class="shrink-0 bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
+        <button id="creatorSaveBtn" onclick="saveCreatorDataToCloud()" class="shrink-0 bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
           Enregistrer
         </button>
       </div>
@@ -1346,7 +1411,7 @@
             <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
             <div class="flex items-center space-x-1 w-full sm:w-32">
               <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
-              <span class="text-xs font-bold text-amber-400">$</span>
+              <span class="text-xs font-bold text-cyan-400">$</span>
             </div>
           </div>
           ${member ? `<span class="text-[10px] text-neutral-500 w-full sm:w-auto">Coloris de #${GROUPES[gi].ids[0]} (même nom et prix)</span>` : ''}
@@ -1428,8 +1493,7 @@
       const fallback = () => prompt("Copie ce texte et envoie-le moi :", txt);
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Catalogue copié'), fallback); else fallback();
     };
-
-    /* ---------- démarrage ---------- */
+/* ---------- démarrage ---------- */
     function openFromHash() {
       const m = /^#article-(\d+)$/.exec(location.hash || ''); if (!m) return;
       const eid = parseInt(m[1], 10);
