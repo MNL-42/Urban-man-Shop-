@@ -188,7 +188,7 @@
     }
 
     /* arrière-plans des fenêtres : voile léger au lieu du noir presque opaque */
-    #tombolaModal, #cartModal, #mobileMoneyModal, #creatorModal {
+    #tombolaModal, #cartModal, #mobileMoneyModal {
       background-color: rgba(0,0,0,.45) !important;
       -webkit-backdrop-filter: blur(10px) saturate(140%) !important; backdrop-filter: blur(10px) saturate(140%) !important;
     }
@@ -545,7 +545,6 @@
         <span><b>URBAN MAN</b><small>SHOP 2243</small></span>
       </a>
       <div class="u-ics">
-        <button class="u-b u-ic dim" onclick="promptCreatorAccess()" title="Espace Créateur" aria-label="Espace Créateur">@</button>
         <button class="u-b u-ic" onclick="focusSearch()" aria-label="Rechercher un article"><i class="fa-solid fa-magnifying-glass"></i></button>
         <button class="u-b u-ic" onclick="openCart()" aria-label="Ouvrir le panier">
           <i class="fa-solid fa-bag-shopping"></i>
@@ -645,7 +644,6 @@
       </div>
       <div class="u-legal">
         <span>&copy; 2026 Urban Man Shop 2243. Tous droits réservés.</span>
-        <button class="u-b" onclick="promptCreatorAccess()" title="Espace Créateur" aria-label="Espace Créateur">@</button>
       </div>
     </div>
   </footer>
@@ -786,42 +784,9 @@
     </div>
   </div>
 
-  <!-- Modal Espace Créateur (@) -->
-  <div id="creatorModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-modal rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden border border-neutral-700">
-      <div class="p-4 border-b border-neutral-800 flex items-center justify-between bg-black/80">
-        <h3 class="font-bold text-base flex items-center text-white">
-          <i class="fa-solid fa-sliders mr-2 text-cyan-400"></i> Espace Créateur
-        </h3>
-        <button onclick="closeCreatorModal()" class="text-neutral-400 hover:text-white" aria-label="Fermer">
-          <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
-      </div>
-
-      <div id="creatorDelBar" class="px-4 py-3 border-b border-neutral-800 bg-black/70 text-xs space-y-2">
-        <div id="creatorDelCount" class="text-neutral-300"></div>
-        <div id="creatorDelWarn" class="hidden text-cyan-400">Firebase refuse l'écriture : l'article est masqué seulement sur ce téléphone. Appuie sur « Tester Firebase » pour voir pourquoi.</div>
-        <div id="creatorDiag" class="text-emerald-300 font-semibold"></div>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="testFirebase()" class="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-3 py-1.5 rounded-lg">Tester Firebase</button>
-          <button onclick="copyForCode()" class="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-3 py-1.5 rounded-lg">Copier pour le code</button>
-        </div>
-      </div>
-
-      <div class="p-4 overflow-y-auto space-y-3 flex-grow" id="creatorProductsList"></div>
-
-      <div class="p-4 border-t border-neutral-800 bg-black/90 flex justify-between items-center gap-3">
-        <span class="text-xs text-neutral-400">Change un nom ou un prix, puis enregistre. Seules les lignes modifiées sont envoyées.</span>
-        <button id="creatorSaveBtn" onclick="saveCreatorDataToCloud()" class="shrink-0 bg-cyan-400 hover:bg-cyan-300 text-black font-extrabold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">
-          Enregistrer
-        </button>
-      </div>
-    </div>
-  </div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { initializeFirestore, collection, getDocs, doc, setDoc, writeBatch, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeFirestore, collection, getDocs, doc, setDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const p1 = "AIzaSyBcoR5";
     const p2 = "yMTMY_ittDm3T9Oak";
@@ -863,7 +828,7 @@
     const SUPPRIMES = [];
     // Photos mises en avant sur l'accueil (une par catégorie).
     const HERO_PICKS = { chaussures: 27, maillots: 25, casquettes: 38 };
-    // Noms et prix : ce code fait foi. Le cloud ne les remplace que s'ils ont été enregistrés depuis l'Espace Créateur.
+    // Noms et prix : ce code fait foi. Le cloud ne les remplace que s'ils y ont été enregistrés (rev 2).
     const PRODUITS_PAR_DEFAUT = {
       2: { n: "Crocs Bape", p: 20 },
       3: { n: "Crocs Marvel", p: 35 },
@@ -1375,125 +1340,6 @@
       openWhatsApp("Bonjour Urban Man Shop 2243, je viens d'effectuer mon paiement par Mobile Money. Voici ma capture.");
     };
 
-    /* ---------- Espace Créateur ---------- */
-    let creatorCount = 0;
-    function setDiag(t) { const d = $('creatorDiag'); if (d) d.textContent = t; }
-    function updateDelBar() {
-      const bar = $('creatorDelBar'); if (!bar) return;
-      const ids = products.filter(p => p.deleted).map(p => p.id);
-      $('creatorDelCount').textContent = ids.length ? `${ids.length} article(s) supprimé(s) : ${ids.map(i => '#' + i).join(' ')}` : 'Aucun article supprimé.';
-      $('creatorDelWarn').classList.toggle('hidden', !cloudRefused);
-    }
-    window.promptCreatorAccess = function() {
-      const code = prompt("Mot de passe Espace Créateur :");
-      if (code === "mnl" || code === "@mnl@" || code === "@Pierrot@" || code === "@Joachim@") openCreatorModal();
-      else if (code !== null) alert("Mot de passe incorrect.");
-    };
-    window.rowImgFail = function(img, id) {
-      if (id > DERNIER_ANCIEN) { const r = img.closest('[data-row]'); if (r) r.remove(); return; }
-      img.onerror = null; img.src = PLACEHOLDER;
-    };
-    function openCreatorModal() {
-      const container = $('creatorProductsList');
-      container.innerHTML = '';
-      products.forEach(p => {
-        const gi = groupOf[p.id], member = gi !== undefined && GROUPES[gi].ids[0] !== p.id;
-        const row = document.createElement('div');
-        row.className = "flex flex-col sm:flex-row items-center justify-between bg-black/60 p-3 rounded-xl border border-neutral-800 gap-3";
-        row.id = `creator-row-${p.id}`; row.setAttribute('data-row', '1');
-        const inCode = SUPPRIMES.includes(p.id);
-        row.innerHTML = `
-          <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-neutral-900" onerror="rowImgFail(this,${p.id})">
-            <span class="text-xs font-mono text-neutral-400">#${p.id}</span>
-          </div>
-          <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto flex-grow max-w-md">
-            <input type="text" id="creator-name-${p.id}" value="${escapeHtml(p.name)}" placeholder="Nom" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
-            <div class="flex items-center space-x-1 w-full sm:w-32">
-              <input type="number" id="creator-price-${p.id}" value="${p.price}" placeholder="Prix" ${member ? 'disabled' : ''} class="bg-neutral-900 border border-neutral-700/80 rounded-lg px-3 py-1.5 text-xs text-white w-full">
-              <span class="text-xs font-bold text-cyan-400">$</span>
-            </div>
-          </div>
-          ${member ? `<span class="text-[10px] text-neutral-500 w-full sm:w-auto">Coloris de #${GROUPES[gi].ids[0]} (même nom et prix)</span>` : ''}
-          <button data-del ${inCode ? 'disabled' : ''} onclick="setProductDeleted(${p.id}, ${!p.deleted})" class="text-xs bg-red-600/80 hover:bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg w-full sm:w-auto">${inCode ? 'Supprimé (code)' : (p.deleted ? 'Restaurer' : 'Supprimer')}</button>`;
-        if (p.deleted) row.classList.add('opacity-40');
-        container.appendChild(row);
-      });
-      $('creatorModal').classList.remove('hidden');
-      setDiag(''); updateDelBar();
-    }
-    window.closeCreatorModal = function() { $('creatorModal').classList.add('hidden'); };
-
-    window.setProductDeleted = async function(id, flag) {
-      const p = products[id - 1];
-      if (!p || SUPPRIMES.includes(id)) return;
-      if (flag && !confirm(`Supprimer l'article #${id} (${p.name}) de la boutique ?`)) return;
-      const loc = readLocalHidden(); loc[String(id)] = flag; writeLocalHidden(loc);     // effet immédiat, sans cloud
-      p.deleted = flag;
-      const row = $(`creator-row-${id}`);
-      if (row) {
-        row.classList.toggle('opacity-40', flag);
-        const btn = row.querySelector('[data-del]');
-        if (btn) { btn.textContent = flag ? 'Restaurer' : 'Supprimer'; btn.setAttribute('onclick', `setProductDeleted(${id}, ${!flag})`); }
-      }
-      renderProducts(); refreshCartPrices(); refreshOpenProduct();
-      try {                                                                              // pour tous les visiteurs
-        await withTimeout(setDoc(doc(db, COL, `item_${id}`), { id, hidden: flag }, { merge: true }), 12000);
-        const l2 = readLocalHidden(); delete l2[String(id)]; writeLocalHidden(l2);
-      } catch (e) { cloudRefused = true; console.log(friendly(e)); setDiag(friendly(e)); }
-      updateDelBar();
-    };
-
-    window.saveCreatorDataToCloud = async function() {
-      const changed = [];
-      products.forEach(p => {
-        const ni = $(`creator-name-${p.id}`), pi = $(`creator-price-${p.id}`);
-        if (!ni || !pi || ni.disabled) return;
-        const name = ni.value.trim() || `Article #${p.id}`, price = parseFloat(pi.value) || 0;
-        if (name !== p.name || price !== p.price) changed.push({ p, name, price });
-      });
-      if (!changed.length) { setDiag('Aucun changement à enregistrer.'); alert('Aucun changement à enregistrer.'); return; }
-      const btn = $('creatorSaveBtn'), old = btn.textContent;
-      btn.disabled = true; btn.textContent = 'Enregistrement…'; setDiag(`Envoi de ${changed.length} modification(s)…`);
-      try {
-        const batch = writeBatch(db);
-        changed.forEach(({ p, name, price }) => batch.set(doc(db, COL, `item_${p.id}`), { id: p.id, name, price, rev: 2 }, { merge: true }));
-        await withTimeout(batch.commit(), 15000);
-        changed.forEach(({ p, name, price }) => { p.name = name; p.price = price; });
-        cloudRefused = false;
-        renderProducts(); refreshCartPrices(); refreshOpenProduct();
-        setDiag(`${changed.length} modification(s) enregistrée(s).`);
-        closeCreatorModal();
-        toast('Enregistré pour tous les téléphones');
-      } catch (e) {
-        setDiag(friendly(e)); alert(friendly(e));
-      } finally { btn.disabled = false; btn.textContent = old; }
-    };
-
-    window.testFirebase = async function() {
-      setDiag('Test en cours…');
-      try { await withTimeout(getDocs(collection(db, COL)), 10000); }
-      catch (e) { setDiag('Lecture impossible : ' + friendly(e)); return; }
-      try {
-        await withTimeout(setDoc(doc(db, COL, '_diag'), { id: -1, ping: new Date().toISOString().slice(0, 19) }, { merge: true }), 10000);
-        cloudRefused = false; updateDelBar();
-        setDiag('Connexion OK : lecture et écriture fonctionnent.');
-      } catch (e) { setDiag('Écriture refusée : ' + friendly(e)); }
-    };
-
-    window.copyForCode = function() {
-      const ids = products.filter(p => p.deleted).map(p => p.id);
-      const lines = products.map(p => {
-        const ni = $(`creator-name-${p.id}`), pi = $(`creator-price-${p.id}`);
-        const name = ni && !ni.disabled ? (ni.value.trim() || `Article #${p.id}`) : p.name;
-        const price = pi && !pi.disabled ? (parseFloat(pi.value) || 0) : p.price;
-        return (isGeneric(name) && !price) ? null : `      ${p.id}: { n: ${JSON.stringify(name)}, p: ${price} },`;
-      }).filter(Boolean);
-      const txt = `const SUPPRIMES = [${ids.join(', ')}];\nconst PRODUITS_PAR_DEFAUT = {\n${lines.join('\n')}\n    };`;
-      const fallback = () => prompt("Copie ce texte et envoie-le moi :", txt);
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast('Catalogue copié'), fallback); else fallback();
-    };
-
     /* ---------- démarrage ---------- */
     function openFromHash() {
       const m = /^#article-(\d+)$/.exec(location.hash || ''); if (!m) return;
@@ -1512,7 +1358,6 @@
       else if (!$('cartModal').hidden) closeCart();
       else if (!$('tombolaModal').hidden) closeTombolaModal();
       else if (!$('mobileMoneyModal').classList.contains('hidden')) closeMobileMoneyModal();
-      else if (!$('creatorModal').classList.contains('hidden')) closeCreatorModal();
     });
 
     window.installPwa = function() {
